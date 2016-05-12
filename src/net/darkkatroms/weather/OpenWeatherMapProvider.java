@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.omnirom.omnijaws;
+package net.darkkatroms.weather;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +22,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import net.darkkatroms.weather.WeatherInfo.DayForecast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.omnirom.omnijaws.WeatherInfo.DayForecast;
 
 import android.content.Context;
 import android.location.Location;

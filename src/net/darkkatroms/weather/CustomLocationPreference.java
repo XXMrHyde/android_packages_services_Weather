@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.omnirom.omnijaws;
+package net.darkkatroms.weather;
 
 import java.util.HashSet;
 import java.util.List;

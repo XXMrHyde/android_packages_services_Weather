@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.omnirom.omnijaws;
+package net.darkkatroms.weather;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -28,10 +28,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import net.darkkatroms.weather.WeatherInfo.DayForecast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.omnirom.omnijaws.WeatherInfo.DayForecast;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

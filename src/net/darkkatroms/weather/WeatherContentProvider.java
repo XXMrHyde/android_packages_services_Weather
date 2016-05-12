@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnirom.omnijaws;
-
-import org.omnirom.omnijaws.WeatherInfo.DayForecast;
+package net.darkkatroms.weather;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -25,6 +23,8 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
+
+import net.darkkatroms.weather.WeatherInfo.DayForecast;
 
 public class WeatherContentProvider extends ContentProvider {
     private static final String TAG = "WeatherService:WeatherContentProvider";
@@ -82,7 +82,7 @@ public class WeatherContentProvider extends ContentProvider {
             COLUMN_LOCATION
     };
 
-    public static final String AUTHORITY = "org.omnirom.omnijaws.provider";
+    public static final String AUTHORITY = "net.darkkatroms.weather.provider";
 
     private static final UriMatcher sUriMatcher;
     static {

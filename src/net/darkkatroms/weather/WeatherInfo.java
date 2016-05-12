@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.omnirom.omnijaws;
+package net.darkkatroms.weather;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

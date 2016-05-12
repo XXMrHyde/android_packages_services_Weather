@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.omnirom.omnijaws;
+package net.darkkatroms.weather;
 
 import java.util.Date;
 
@@ -43,13 +43,13 @@ import android.util.Log;
 public class WeatherService extends Service {
     private static final String TAG = "WeatherService";
     private static final boolean DEBUG = false;
-    private static final String ACTION_UPDATE = "org.omnirom.omnijaws.ACTION_UPDATE";
-    private static final String ACTION_ALARM = "org.omnirom.omnijaws.ACTION_ALARM";
+    private static final String ACTION_UPDATE = "net.darkkatroms.weather.ACTION_UPDATE";
+    private static final String ACTION_ALARM = "net.darkkatroms.weather.ACTION_ALARM";
 
     private static final String EXTRA_FORCE = "force";
 
     static final String ACTION_CANCEL_LOCATION_UPDATE =
-            "org.omnirom.omnijaws.CANCEL_LOCATION_UPDATE";
+            "net.darkkatroms.weather.CANCEL_LOCATION_UPDATE";
 
     private static final float LOCATION_ACCURACY_THRESHOLD_METERS = 50000;
     public static final long LOCATION_REQUEST_TIMEOUT = 5L * 60L * 1000L; // request for at most 5 minutes
