@@ -15,5 +15,8 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-	<string name="app_name" translatable="false">DKWeatherService</string>
+    <!-- CyanogenMod additions -->
+
+    <!-- Forecast unavailable -->
+    <string name="weather_3200" translatable="false"></string>
 </resources>
