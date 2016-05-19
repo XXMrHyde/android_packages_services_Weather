@@ -15,12 +15,23 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+    <!-- General -->
 	<string name="app_name">DK Weather Service</string>
 	<string name="weather_settings_title">Weather settings</string>
 
+    <!-- Condition image type -->
+	<string name="condition_image_type_title">Forcast dialog weather image</string>
+	<string name="image_type_monochrome">Monochrome</string>
+	<string name="image_type_colored">Colored</string>
+	<string name="image_type_vclouds">VClouds</string>
+
     <!-- CyanogenMod additions -->
 
-    <!-- Weather - Weather codes -->
+    <!-- General -->
+    <string name="unknown">Unknown</string>
+    <string name="menu_done">Done</string>
+
+    <!-- Weather codes -->
     <string name="weather_0">Tornado</string>
     <string name="weather_1">Tropical Storm</string>
     <string name="weather_2">Hurricane</string>
@@ -76,4 +87,18 @@
     <string name="weather_45">Thundershowers</string>
     <string name="weather_46">Snow Showers</string>
     <string name="weather_47">Isolated Thundershowers</string>
+
+    <!-- Weather - Speed units -->
+    <string name="weather_kph">kph</string>
+    <string name="weather_mph">mph</string>
+
+    <!-- Weather - Wind directions -->
+    <string name="weather_N">N</string>
+    <string name="weather_NE">NE</string>
+    <string name="weather_E">E</string>
+    <string name="weather_SE">SE</string>
+    <string name="weather_S">S</string>
+    <string name="weather_SW">SW</string>
+    <string name="weather_W">W</string>
+    <string name="weather_NW">NW</string>
 </resources>

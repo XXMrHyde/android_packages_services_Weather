@@ -40,8 +40,7 @@ public class WeatherContentProvider extends ContentProvider {
     private static final String COLUMN_CURRENT_CONDITION = "condition";
     private static final String COLUMN_CURRENT_TEMPERATURE = "temperature";
     private static final String COLUMN_CURRENT_HUMIDITY = "humidity";
-    private static final String COLUMN_CURRENT_WIND_SPEED = "wind_speed";
-    private static final String COLUMN_CURRENT_WIND_DIRECTION = "wind_direction";
+    private static final String COLUMN_CURRENT_WIND = "wind";
     private static final String COLUMN_CURRENT_TIME_STAMP = "time_stamp";
     private static final String COLUMN_CURRENT_CONDITION_CODE = "condition_code";
 
@@ -49,7 +48,6 @@ public class WeatherContentProvider extends ContentProvider {
     private static final String COLUMN_FORECAST_HIGH = "forecast_high";
     private static final String COLUMN_FORECAST_CONDITION = "forecast_condition";
     private static final String COLUMN_FORECAST_CONDITION_CODE = "forecast_condition_code";
-    private static final String COLUMN_FORECAST_DATE = "forecast_date";
 
     private static final String COLUMN_ENABLED = "enabled";
     private static final String COLUMN_PROVIDER = "provider";
@@ -63,15 +61,13 @@ public class WeatherContentProvider extends ContentProvider {
             COLUMN_CURRENT_CONDITION,
             COLUMN_CURRENT_TEMPERATURE,
             COLUMN_CURRENT_HUMIDITY,
-            COLUMN_CURRENT_WIND_SPEED,
-            COLUMN_CURRENT_WIND_DIRECTION,
+            COLUMN_CURRENT_WIND,
             COLUMN_CURRENT_TIME_STAMP,
             COLUMN_CURRENT_CONDITION_CODE,
             COLUMN_FORECAST_LOW,
             COLUMN_FORECAST_HIGH,
             COLUMN_FORECAST_CONDITION,
             COLUMN_FORECAST_CONDITION_CODE,
-            COLUMN_FORECAST_DATE
     };
 
     private static final String[] PROJECTION_DEFAULT_SETTINGS = new String[] {
@@ -131,9 +127,9 @@ public class WeatherContentProvider extends ContentProvider {
                         .add(COLUMN_CURRENT_CITY_ID, weather.getId())
                         .add(COLUMN_CURRENT_CONDITION, weather.getCondition())
                         .add(COLUMN_CURRENT_HUMIDITY, weather.getFormattedHumidity())
-                        .add(COLUMN_CURRENT_WIND_SPEED, weather.getWindSpeed())
-                        .add(COLUMN_CURRENT_WIND_DIRECTION, weather.getWindDirection())
-                        .add(COLUMN_CURRENT_TEMPERATURE, weather.getTemperature())
+                        .add(COLUMN_CURRENT_WIND, weather.getFormattedWindSpeed()
+                                + " " + weather.getWindDirection())
+                        .add(COLUMN_CURRENT_TEMPERATURE, weather.getFormattedTemperature())
                         .add(COLUMN_CURRENT_TIME_STAMP, weather.getTimestamp().toString())
                         .add(COLUMN_CURRENT_CONDITION_CODE, weather.getConditionCode());
 
@@ -141,10 +137,9 @@ public class WeatherContentProvider extends ContentProvider {
                 for (DayForecast day : weather.getForecasts()) {
                     result.newRow()
                             .add(COLUMN_FORECAST_CONDITION, day.getCondition(mContext))
-                            .add(COLUMN_FORECAST_LOW, day.getLow())
-                            .add(COLUMN_FORECAST_HIGH, day.getHigh())
-                            .add(COLUMN_FORECAST_CONDITION_CODE, day.getConditionCode())
-                            .add(COLUMN_FORECAST_DATE, day.date);
+                            .add(COLUMN_FORECAST_LOW, day.getFormattedLow())
+                            .add(COLUMN_FORECAST_HIGH, day.getFormattedHigh())
+                            .add(COLUMN_FORECAST_CONDITION_CODE, day.getConditionCode());
                 }
                 return result;
             }

@@ -120,6 +120,7 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
             JSONObject windData = conditions.getJSONObject("wind");
             ArrayList<DayForecast> forecasts =
                     parseForecasts(new JSONObject(forecastResponse).getJSONArray("list"), metric);
+            int speedUnitResId = metric ? R.string.weather_kph : R.string.weather_mph;
             String localizedCityName = conditions.getString("name");
 
             WeatherInfo w = new WeatherInfo(mContext, conditions.getString("id"), localizedCityName,
@@ -127,10 +128,11 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                     /* conditionCode */ mapConditionIconToCode(
                             weather.getString("icon"), weather.getInt("id")),
                     /* temperature */ sanitizeTemperature(conditionData.getDouble("temp"), metric),
+                    /* tempUnit */ metric ? "C" : "F",
                     /* humidity */ (float) conditionData.getDouble("humidity"),
                     /* wind */ (float) windData.getDouble("speed"),
                     /* windDir */ windData.has("deg") ? windData.getInt("deg") : 0,
-                    metric,
+                    /* speedUnit */ mContext.getString(speedUnitResId),
                     forecasts,
                     System.currentTimeMillis());
 
@@ -162,18 +164,14 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                         /* high */ sanitizeTemperature(temperature.getDouble("max"), metric),
                         /* condition */ data.getString("main"),
                         /* conditionCode */ mapConditionIconToCode(
-                                data.getString("icon"), data.getInt("id")),
-                        "NaN",
-                        metric);
+                                data.getString("icon"), data.getInt("id")));
             } catch (JSONException e) {
                 Log.w(TAG, "Invalid forecast for day " + i + " creating dummy", e);
                 item = new DayForecast(
                         /* low */ 0,
                         /* high */ 0,
                         /* condition */ "",
-                        /* conditionCode */ -1,
-                        "NaN",
-                        metric);
+                        /* conditionCode */ -1);
             }
             result.add(item);
         }
@@ -226,6 +224,28 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
         }
 
         return "en";
+    }
+
+    private static final HashMap<String, Integer> ICON_MAPPING = new HashMap<String, Integer>();
+    static {
+        ICON_MAPPING.put("01d", 32);
+        ICON_MAPPING.put("01n", 31);
+        ICON_MAPPING.put("02d", 30);
+        ICON_MAPPING.put("02n", 29);
+        ICON_MAPPING.put("03d", 26);
+        ICON_MAPPING.put("03n", 26);
+        ICON_MAPPING.put("04d", 28);
+        ICON_MAPPING.put("04n", 27);
+        ICON_MAPPING.put("09d", 12);
+        ICON_MAPPING.put("09n", 11);
+        ICON_MAPPING.put("10d", 40);
+        ICON_MAPPING.put("10n", 45);
+        ICON_MAPPING.put("11d", 4);
+        ICON_MAPPING.put("11n", 4);
+        ICON_MAPPING.put("13d", 16);
+        ICON_MAPPING.put("13n", 16);
+        ICON_MAPPING.put("50d", 21);
+        ICON_MAPPING.put("50n", 20);
     }
 
     private int mapConditionIconToCode(String icon, int conditionId) {
@@ -300,17 +320,6 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
             case 781:    // tornado
                 return 0;
 
-            // clouds
-            case 800:     // clear sky
-                return 32;
-            case 801:     // few clouds
-                return 34;
-            case 802:     // scattered clouds
-                return 28;
-            case 803:     // broken clouds
-            case 804:     // overcast clouds
-                return 30;
-
             // Extreme
             case 900: return 0;  // tornado
             case 901: return 1;  // tropical storm
@@ -319,6 +328,12 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
             case 904: return 36; // hot
             case 905: return 24; // windy
             case 906: return 17; // hail
+        }
+
+        // Not yet handled - Use generic icon mapping
+        Integer condition = ICON_MAPPING.get(icon);
+        if (condition != null) {
+            return condition;
         }
 
         return -1;

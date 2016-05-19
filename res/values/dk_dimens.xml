@@ -15,11 +15,9 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <color name="color_background">#ff1b1f23</color>
-    <color name="theme_primary">#ff263238</color>  <!-- material_blue_grey_900 -->
-    <color name="theme_primary_dark">#ff21272b</color>  <!-- material_blue_grey_950 -->
-    <color name="theme_accent">#ff009688</color>  <!-- material_deep_teal_500 -->
-
     <!-- CyanogenMod additions -->
-    <color name="text_shadow_opaque">#3f000000</color>
+
+    <!-- Forcast dialog -->
+    <dimen name="forecast_dialog_width">340dp</dimen>
+    <dimen name="forecast_icon_size">36dp</dimen>
 </resources>

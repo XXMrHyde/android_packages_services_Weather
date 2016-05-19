@@ -50,6 +50,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private boolean mTriggerPermissionCheck;
     private ListPreference mUpdateInterval;
     private CustomLocationPreference mLocation;
+    private ListPreference mConditionImageType;
 
     private static final String PREF_KEY_CUSTOM_LOCATION_CITY = "weather_custom_location_city";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
@@ -93,6 +94,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             mTriggerUpdate = false;
             checkLocationEnabled();
         }
+
+        mConditionImageType = (ListPreference) findPreference(Config.PREF_KEY_CONDITION_IMAGE_TYPE);
+        mConditionImageType.setOnPreferenceChangeListener(this);
+        idx = mConditionImageType.findIndexOfValue(mPrefs.getString(Config.PREF_KEY_CONDITION_IMAGE_TYPE,
+                mConditionImageType.getEntryValues()[0].toString()));
+        mConditionImageType.setValueIndex(idx);
+        mConditionImageType.setSummary(mConditionImageType.getEntries()[idx]);
     }
 
     @Override
@@ -171,6 +179,12 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             mUpdateInterval.setSummary(mUpdateInterval.getEntries()[idx]);
             mUpdateInterval.setValueIndex(idx);
             WeatherService.scheduleUpdate(this);
+            return true;
+        } else if (preference == mConditionImageType) {
+            String value = (String) newValue;
+            int idx = mConditionImageType.findIndexOfValue(value);
+            mConditionImageType.setSummary(mConditionImageType.getEntries()[idx]);
+            mConditionImageType.setValueIndex(idx);
             return true;
         }
         return false;

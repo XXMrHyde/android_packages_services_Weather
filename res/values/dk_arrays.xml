@@ -15,11 +15,15 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <color name="color_background">#ff1b1f23</color>
-    <color name="theme_primary">#ff263238</color>  <!-- material_blue_grey_900 -->
-    <color name="theme_primary_dark">#ff21272b</color>  <!-- material_blue_grey_950 -->
-    <color name="theme_accent">#ff009688</color>  <!-- material_deep_teal_500 -->
+	<string-array name="condition_image_type_entries" translatable="false">
+		<item>@string/image_type_monochrome</item>
+		<item>@string/image_type_colored</item>
+		<item>@string/image_type_vclouds</item>
+	</string-array>
 
-    <!-- CyanogenMod additions -->
-    <color name="text_shadow_opaque">#3f000000</color>
+	<string-array name="condition_image_type_values" translatable="false">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+	</string-array>
 </resources>

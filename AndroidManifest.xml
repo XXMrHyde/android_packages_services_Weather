@@ -32,6 +32,15 @@
 			</intent-filter>
 		</activity>
 
+        <!-- The weather forecast activity -->
+        <activity android:name=".ForecastActivity"
+            android:hardwareAccelerated="true"
+            android:noHistory="true"
+            android:theme="@style/transparent"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
+            android:excludeFromRecents="true" />
+
 		<service
 			android:name=".WeatherService"
 			android:exported="true" />

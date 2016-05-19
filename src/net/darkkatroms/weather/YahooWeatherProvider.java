@@ -145,8 +145,8 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                 WeatherInfo w = new WeatherInfo(mContext, id,
                         handler.city,
                         handler.condition, handler.conditionCode, handler.temperature,
-                        handler.humidity, handler.windSpeed,
-                        handler.windDirection, metric, handler.forecasts,
+                        handler.temperatureUnit, handler.humidity, handler.windSpeed,
+                        handler.windDirection, handler.speedUnit, handler.forecasts,
                         System.currentTimeMillis());
                 log(TAG, "Weather updated: " + w);
                 return w;
@@ -190,23 +190,13 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                 conditionCode = (int) stringToFloat(attributes.getValue("code"), -1);
                 temperature = stringToFloat(attributes.getValue("temp"), Float.NaN);
             } else if (qName.equals("yweather:forecast")) {
-                String date = attributes.getValue("date");
-                String dayShort = attributes.getValue("day");
-                // is this forecaset days before today?
-                if (dayShort .equals(todayShort) && !addForecastDay) {
-                    addForecastDay = true;
-                }
-                if (addForecastDay) {
-                    DayForecast day = new DayForecast(
-                            /* low */ stringToFloat(attributes.getValue("low"), Float.NaN),
-                            /* high */ stringToFloat(attributes.getValue("high"), Float.NaN),
-                            /* condition */ attributes.getValue("text"),
-                            /* conditionCode */ (int) stringToFloat(attributes.getValue("code"), -1),
-                            attributes.getValue("date"),
-                            metric);
-                    if (!Float.isNaN(day.low) && !Float.isNaN(day.high) && day.conditionCode >= 0) {
-                        forecasts.add(day);
-                    }
+                DayForecast day = new DayForecast(
+                        /* low */ stringToFloat(attributes.getValue("low"), Float.NaN),
+                        /* high */ stringToFloat(attributes.getValue("high"), Float.NaN),
+                        /* condition */ attributes.getValue("text"),
+                        /* conditionCode */ (int) stringToFloat(attributes.getValue("code"), -1));
+                if (!Float.isNaN(day.low) && !Float.isNaN(day.high) && day.conditionCode >= 0) {
+                    forecasts.add(day);
                 }
             }
         }
