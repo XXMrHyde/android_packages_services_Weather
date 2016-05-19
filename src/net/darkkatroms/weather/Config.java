@@ -32,6 +32,7 @@ public class Config {
     public static final String PREF_KEY_LAST_UPDATE = "last_update";
     public static final String PREF_KEY_ENABLE = "enable";
     public static final String PREF_KEY_UPDATE_INTERVAL = "update_interval";
+    public static final String PREF_KEY_CONDITION_IMAGE_TYPE = "condition_image_type";
 
     public static AbstractWeatherProvider getProvider(Context context) {
         SharedPreferences prefs = PreferenceManager
@@ -162,6 +163,14 @@ public class Config {
                 .getDefaultSharedPreferences(context);
 
         String valueString = prefs.getString(PREF_KEY_UPDATE_INTERVAL, "1");
+        return Integer.valueOf(valueString);
+    }
+
+    public static int getConditionImageType(Context context) {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        String valueString = prefs.getString(PREF_KEY_CONDITION_IMAGE_TYPE, "0");
         return Integer.valueOf(valueString);
     }
 }

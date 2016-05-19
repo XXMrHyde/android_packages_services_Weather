@@ -15,10 +15,21 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+    <!-- General -->
 	<string name="app_name">DK Wetter Dienst</string>
 	<string name="weather_settings_title">Wetter Einstellungen</string>
 
+    <!-- Condition image type -->
+	<string name="condition_image_type_title">Vorhersage Dialog Wetter Symbol</string>
+	<string name="image_type_monochrome">Einfarbig</string>
+	<string name="image_type_colored">Farbig</string>
+	<string name="image_type_vclouds">VClouds</string>
+
     <!-- CyanogenMod additions -->
+
+    <!-- General -->
+    <string name="unknown">Unbekannt</string>
+    <string name="menu_done">Fertig</string>
 
     <!-- Weather - Weather codes -->
     <string name="weather_0">Tornado</string>
@@ -76,4 +87,7 @@
     <string name="weather_45">Gewitterschauer</string>
     <string name="weather_46">Schneeschauer</string>
     <string name="weather_47">Vereinzelte Gewitter</string>
+
+    <!-- Weather - Speed units -->
+    <string name="weather_kph">km/h</string>
 </resources>
