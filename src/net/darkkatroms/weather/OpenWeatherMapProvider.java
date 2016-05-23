@@ -118,6 +118,8 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
             JSONObject weather = conditions.getJSONArray("weather").getJSONObject(0);
             JSONObject conditionData = conditions.getJSONObject("main");
             JSONObject windData = conditions.getJSONObject("wind");
+            JSONObject rainData = conditions.has("rain") ? conditions.getJSONObject("rain") : null;
+            JSONObject snowData = conditions.has("snow") ? conditions.getJSONObject("snow") : null;
             ArrayList<DayForecast> forecasts =
                     parseForecasts(new JSONObject(forecastResponse).getJSONArray("list"), metric);
             int speedUnitResId = metric ? R.string.weather_kph : R.string.weather_mph;
@@ -133,6 +135,10 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                     /* wind */ (float) windData.getDouble("speed"),
                     /* windDir */ windData.has("deg") ? windData.getInt("deg") : 0,
                     /* speedUnit */ mContext.getString(speedUnitResId),
+                    /* rain1h */ rainData == null ? 0 : rainData.has("1h") ? (float) rainData.getDouble("1h") : 0,
+                    /* rain3h */ rainData == null ? 0 : rainData.has("3h") ? (float) rainData.getDouble("3h") : 0,
+                    /* snow1h */ snowData == null ? 0 : snowData.has("1h") ? (float) snowData.getDouble("1h") : 0,
+                    /* snow3h */ snowData == null ? 0 : snowData.has("3h") ? (float) snowData.getDouble("3h") : 0,
                     forecasts,
                     System.currentTimeMillis());
 
@@ -164,14 +170,18 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                         /* high */ sanitizeTemperature(temperature.getDouble("max"), metric),
                         /* condition */ data.getString("main"),
                         /* conditionCode */ mapConditionIconToCode(
-                                data.getString("icon"), data.getInt("id")));
+                                data.getString("icon"), data.getInt("id")),
+                        /* rain */ forecast.has("rain") ? (float) forecast.getDouble("rain") : 0,
+                        /* snow */ forecast.has("snow") ? (float) forecast.getDouble("snow") : 0);
             } catch (JSONException e) {
                 Log.w(TAG, "Invalid forecast for day " + i + " creating dummy", e);
                 item = new DayForecast(
                         /* low */ 0,
                         /* high */ 0,
                         /* condition */ "",
-                        /* conditionCode */ -1);
+                        /* conditionCode */ -1,
+                        /* rain */ 0,
+                        /* snow */ 0);
             }
             result.add(item);
         }

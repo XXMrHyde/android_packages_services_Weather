@@ -41,6 +41,10 @@ public class WeatherContentProvider extends ContentProvider {
     private static final String COLUMN_CURRENT_TEMPERATURE = "temperature";
     private static final String COLUMN_CURRENT_HUMIDITY = "humidity";
     private static final String COLUMN_CURRENT_WIND = "wind";
+    private static final String COLUMN_CURRENT_RAIN1H = "rain1h";
+    private static final String COLUMN_CURRENT_RAIN3H = "rain3h";
+    private static final String COLUMN_CURRENT_SNOW1H = "snow1h";
+    private static final String COLUMN_CURRENT_SNOW3H = "snow3h";
     private static final String COLUMN_CURRENT_TIME_STAMP = "time_stamp";
     private static final String COLUMN_CURRENT_CONDITION_CODE = "condition_code";
 
@@ -48,6 +52,8 @@ public class WeatherContentProvider extends ContentProvider {
     private static final String COLUMN_FORECAST_HIGH = "forecast_high";
     private static final String COLUMN_FORECAST_CONDITION = "forecast_condition";
     private static final String COLUMN_FORECAST_CONDITION_CODE = "forecast_condition_code";
+    private static final String COLUMN_FORECAST_RAIN = "forecast_rain";
+    private static final String COLUMN_FORECAST_SNOW = "forecast_snow";
 
     private static final String COLUMN_ENABLED = "enabled";
     private static final String COLUMN_PROVIDER = "provider";
@@ -62,12 +68,18 @@ public class WeatherContentProvider extends ContentProvider {
             COLUMN_CURRENT_TEMPERATURE,
             COLUMN_CURRENT_HUMIDITY,
             COLUMN_CURRENT_WIND,
+            COLUMN_CURRENT_RAIN1H,
+            COLUMN_CURRENT_RAIN3H,
+            COLUMN_CURRENT_SNOW1H,
+            COLUMN_CURRENT_SNOW3H,
             COLUMN_CURRENT_TIME_STAMP,
             COLUMN_CURRENT_CONDITION_CODE,
             COLUMN_FORECAST_LOW,
             COLUMN_FORECAST_HIGH,
             COLUMN_FORECAST_CONDITION,
             COLUMN_FORECAST_CONDITION_CODE,
+            COLUMN_FORECAST_RAIN,
+            COLUMN_FORECAST_SNOW
     };
 
     private static final String[] PROJECTION_DEFAULT_SETTINGS = new String[] {
@@ -129,6 +141,10 @@ public class WeatherContentProvider extends ContentProvider {
                         .add(COLUMN_CURRENT_HUMIDITY, weather.getFormattedHumidity())
                         .add(COLUMN_CURRENT_WIND, weather.getFormattedWindSpeed()
                                 + " " + weather.getWindDirection())
+                        .add(COLUMN_CURRENT_RAIN1H, weather.getFormattedRain1H())
+                        .add(COLUMN_CURRENT_RAIN3H, weather.getFormattedRain3H())
+                        .add(COLUMN_CURRENT_SNOW1H, weather.getFormattedSnow1H())
+                        .add(COLUMN_CURRENT_SNOW3H, weather.getFormattedSnow3H())
                         .add(COLUMN_CURRENT_TEMPERATURE, weather.getFormattedTemperature())
                         .add(COLUMN_CURRENT_TIME_STAMP, weather.getTimestamp().toString())
                         .add(COLUMN_CURRENT_CONDITION_CODE, weather.getConditionCode());
@@ -139,7 +155,9 @@ public class WeatherContentProvider extends ContentProvider {
                             .add(COLUMN_FORECAST_CONDITION, day.getCondition(mContext))
                             .add(COLUMN_FORECAST_LOW, day.getFormattedLow())
                             .add(COLUMN_FORECAST_HIGH, day.getFormattedHigh())
-                            .add(COLUMN_FORECAST_CONDITION_CODE, day.getConditionCode());
+                            .add(COLUMN_FORECAST_CONDITION_CODE, day.getConditionCode())
+                            .add(COLUMN_FORECAST_RAIN, day.getFormattedRain())
+                            .add(COLUMN_FORECAST_SNOW, day.getFormattedSnow());
                 }
                 return result;
             }

@@ -26,9 +26,14 @@ import android.graphics.drawable.Drawable;
 
 public class WeatherInfo {
     private static final DecimalFormat sNoDigitsFormat = new DecimalFormat("0");
+    private static final DecimalFormat sPrecipitationDigitsFormat = new DecimalFormat("#0.##");
 
     private static final int ICON_MONOCHROME = 0;
     private static final int ICON_COLORED    = 1;
+
+    private static final float PRECIPITATION_ITEM_THRESHOLD = 0.005f;
+    public static final String PRECIPITATION_ITEM_IS_NAN    = "PrecipitationIsNaN";
+    public static final String PRECIPITATION_ITEM_IS_ZERO   = "PrecipitationIsZero";
 
     private Context mContext;
 
@@ -36,19 +41,27 @@ public class WeatherInfo {
     private String city;
     private String condition;
     private int conditionCode;
-    public float temperature;
+    private float temperature;
     private String tempUnit;
     private float humidity;
     private float wind;
     private int windDirection;
     private String speedUnit;
+    private float rain1H;
+    private float rain3H;
+    private float snow1H;
+    private float snow3H;
     private long timestamp;
     private ArrayList<DayForecast> forecasts;
+
+    private static String sPrecipitationUnit1h;
+    private static String sPrecipitationUnit3h;
 
     public WeatherInfo(Context context, String id,
             String city, String condition, int conditionCode, float temp,
             String tempUnit, float humidity, float wind, int windDir,
-            String speedUnit, ArrayList<DayForecast> forecasts, long timestamp) {
+            String speedUnit, float rain1H, float rain3H, float snow1H, float snow3H,
+            ArrayList<DayForecast> forecasts, long timestamp) {
         this.mContext = context.getApplicationContext();
         this.id = id;
         this.city = city;
@@ -59,9 +72,16 @@ public class WeatherInfo {
         this.humidity = humidity;
         this.wind = wind;
         this.windDirection = windDir;
+        this.rain1H = rain1H;
+        this.rain3H = rain3H;
+        this.snow1H = snow1H;
+        this.snow3H = snow3H;
         this.speedUnit = speedUnit;
         this.timestamp = timestamp;
         this.forecasts = forecasts;
+
+        this.sPrecipitationUnit1h = mContext.getResources().getString(R.string.precipitation_unit_1h_title);
+        this.sPrecipitationUnit3h = mContext.getResources().getString(R.string.precipitation_unit_3h_title);
     }
 
     public static class WeatherLocation {
@@ -76,12 +96,16 @@ public class WeatherInfo {
         public final float low, high;
         public final int conditionCode;
         public final String condition;
+        public final float rain, snow;
 
-        public DayForecast(float low, float high, String condition, int conditionCode) {
+        public DayForecast(float low, float high, String condition, int conditionCode,
+                float rain, float snow) {
             this.low = low;
             this.high = high;
             this.condition = condition;
             this.conditionCode = conditionCode;
+            this.rain = rain;
+            this.snow = snow;
         }
 
         public String getFormattedLow() {
@@ -98,6 +122,28 @@ public class WeatherInfo {
 
         public int getConditionCode() {
             return conditionCode;
+        }
+
+        public String getFormattedRain() {
+            if (Float.isNaN(rain)) {
+                return PRECIPITATION_ITEM_IS_NAN;
+            }
+            if (rain >= PRECIPITATION_ITEM_THRESHOLD) {
+                return sPrecipitationDigitsFormat.format(rain) + sPrecipitationUnit1h;
+            } else {
+                return PRECIPITATION_ITEM_IS_ZERO;
+            }
+        }
+
+        public String getFormattedSnow() {
+            if (Float.isNaN(snow)) {
+                return PRECIPITATION_ITEM_IS_NAN;
+            }
+            if (snow >= PRECIPITATION_ITEM_THRESHOLD) {
+                return sPrecipitationDigitsFormat.format(snow) + sPrecipitationUnit1h;
+            } else {
+                return PRECIPITATION_ITEM_IS_ZERO;
+            }
         }
     }
 
@@ -157,6 +203,50 @@ public class WeatherInfo {
         return mContext.getString(resId);
     }
 
+    public String getFormattedRain1H() {
+        if (Float.isNaN(rain1H)) {
+            return PRECIPITATION_ITEM_IS_NAN;
+        }
+        if (rain1H >= PRECIPITATION_ITEM_THRESHOLD) {
+            return sPrecipitationDigitsFormat.format(rain1H) + sPrecipitationUnit1h;
+        } else {
+            return PRECIPITATION_ITEM_IS_ZERO;
+        }
+    }
+
+    public String getFormattedRain3H() {
+        if (Float.isNaN(rain3H)) {
+            return PRECIPITATION_ITEM_IS_NAN;
+        }
+        if (rain3H >= PRECIPITATION_ITEM_THRESHOLD) {
+            return sPrecipitationDigitsFormat.format(rain3H) + sPrecipitationUnit3h;
+        } else {
+            return PRECIPITATION_ITEM_IS_ZERO;
+        }
+    }
+
+    public String getFormattedSnow1H() {
+        if (Float.isNaN(snow1H)) {
+            return PRECIPITATION_ITEM_IS_NAN;
+        }
+        if (snow1H >= PRECIPITATION_ITEM_THRESHOLD) {
+            return sPrecipitationDigitsFormat.format(snow1H) + sPrecipitationUnit1h;
+        } else {
+            return PRECIPITATION_ITEM_IS_ZERO;
+        }
+    }
+
+    public String getFormattedSnow3H() {
+        if (Float.isNaN(snow3H)) {
+            return PRECIPITATION_ITEM_IS_NAN;
+        }
+        if (snow3H >= PRECIPITATION_ITEM_THRESHOLD) {
+            return sPrecipitationDigitsFormat.format(snow3H) + sPrecipitationUnit3h;
+        } else {
+            return PRECIPITATION_ITEM_IS_ZERO;
+        }
+    }
+
     public Date getTimestamp() {
         return new Date(timestamp);
     }
@@ -196,7 +286,8 @@ public class WeatherInfo {
             iconName = "weather_vclouds_";
         }
 
-        final int resId = mContext.getResources().getIdentifier(iconName + conditionCode, "drawable", mContext.getPackageName());
+        final int resId = mContext.getResources().getIdentifier(
+                iconName + conditionCode, "drawable", mContext.getPackageName());
         if (resId != 0) {
             return mContext.getResources().getDrawable(resId);
         }
@@ -230,6 +321,14 @@ public class WeatherInfo {
         builder.append(getFormattedWindSpeed());
         builder.append(" at ");
         builder.append(getWindDirection());
+        builder.append(", rain1H ");
+        builder.append(getFormattedRain1H());
+        builder.append(", rain3H ");
+        builder.append(getFormattedRain3H());
+        builder.append(", snow1H ");
+        builder.append(getFormattedSnow1H());
+        builder.append(", snow3H ");
+        builder.append(getFormattedSnow3H());
         if (forecasts.size() > 0) {
             builder.append(", forecasts:");
         }
@@ -243,6 +342,8 @@ public class WeatherInfo {
             builder.append(", low ").append(d.getFormattedLow());
             builder.append(", ").append(d.condition);
             builder.append("(").append(d.conditionCode).append(")");
+            builder.append(", rain ").append(d.getFormattedRain());
+            builder.append(", snow ").append(d.getFormattedSnow());
         }
         return builder.toString();
     }
@@ -259,6 +360,10 @@ public class WeatherInfo {
         builder.append(wind).append('|');
         builder.append(windDirection).append('|');
         builder.append(speedUnit).append('|');
+        builder.append(rain1H).append('|');
+        builder.append(rain3H).append('|');
+        builder.append(snow1H).append('|');
+        builder.append(snow3H).append('|');
         builder.append(timestamp).append('|');
         serializeForecasts(builder);
         return builder.toString();
@@ -271,7 +376,9 @@ public class WeatherInfo {
             builder.append(d.high).append(';');
             builder.append(d.low).append(';');
             builder.append(d.condition).append(';');
-            builder.append(d.conditionCode);
+            builder.append(d.conditionCode).append(';');
+            builder.append(d.rain).append(';');
+            builder.append(d.snow);
         }
     }
 
@@ -281,14 +388,14 @@ public class WeatherInfo {
         }
 
         String[] parts = input.split("\\|");
-        if (parts == null || parts.length != 12) {
+        if (parts == null || parts.length != 16) {
             return null;
         }
 
         int conditionCode, windDirection;
         long timestamp;
-        float temperature, humidity, wind;
-        String[] forecastParts = parts[11].split(";");
+        float temperature, humidity, wind, rain1H, rain3H, snow1H, snow3H;
+        String[] forecastParts = parts[15].split(";");
         int forecastItems;
         ArrayList<DayForecast> forecasts = new ArrayList<DayForecast>();
 
@@ -299,25 +406,32 @@ public class WeatherInfo {
             humidity = Float.parseFloat(parts[6]);
             wind = Float.parseFloat(parts[7]);
             windDirection = Integer.parseInt(parts[8]);
-            timestamp = Long.parseLong(parts[10]);
+            rain1H = Float.parseFloat(parts[10]);
+            rain3H = Float.parseFloat(parts[11]);
+            snow1H = Float.parseFloat(parts[12]);
+            snow3H = Float.parseFloat(parts[13]);
+            timestamp = Long.parseLong(parts[14]);
             forecastItems = forecastParts == null ? 0 : Integer.parseInt(forecastParts[0]);
         } catch (NumberFormatException e) {
             return null;
         }
 
-        if (forecastItems == 0 || forecastParts.length != 4 * forecastItems + 1) {
+        if (forecastItems == 0 || forecastParts.length != 6 * forecastItems + 1) {
             return null;
         }
 
         // Parse the forecast data
         try {
             for (int item = 0; item < forecastItems; item ++) {
-                int offset = item * 4 + 1;
+                int offset = item * 6 + 1;
                 DayForecast day = new DayForecast(
                         /* low */ Float.parseFloat(forecastParts[offset + 1]),
                         /* high */ Float.parseFloat(forecastParts[offset]),
                         /* condition */ forecastParts[offset + 2],
-                        /* conditionCode */ Integer.parseInt(forecastParts[offset + 3]));
+                        /* conditionCode */ Integer.parseInt(forecastParts[offset + 3]),
+                        /* rain */ Float.parseFloat(forecastParts[offset + 4]),
+                        /* snow */ Float.parseFloat(forecastParts[offset + 5]));
+
                 if (!Float.isNaN(day.low) && !Float.isNaN(day.high) && day.conditionCode >= 0) {
                     forecasts.add(day);
                 }
@@ -333,6 +447,6 @@ public class WeatherInfo {
                 /* id */ parts[0], /* city */ parts[1], /* condition */ parts[2],
                 conditionCode, temperature, /* tempUnit */ parts[5],
                 humidity, wind, windDirection, /* speedUnit */ parts[9],
-                /* forecasts */ forecasts, timestamp);
+                rain1H, rain3H, snow1H, snow3H, /* forecasts */ forecasts, timestamp);
     }
 }
