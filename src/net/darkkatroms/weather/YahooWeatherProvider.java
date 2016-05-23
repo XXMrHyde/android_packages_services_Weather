@@ -146,7 +146,7 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                         handler.city,
                         handler.condition, handler.conditionCode, handler.temperature,
                         handler.temperatureUnit, handler.humidity, handler.windSpeed,
-                        handler.windDirection, handler.speedUnit, handler.forecasts,
+                        handler.windDirection, handler.speedUnit, 0, 0, 0, 0, handler.forecasts,
                         System.currentTimeMillis());
                 log(TAG, "Weather updated: " + w);
                 return w;
@@ -194,7 +194,9 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                         /* low */ stringToFloat(attributes.getValue("low"), Float.NaN),
                         /* high */ stringToFloat(attributes.getValue("high"), Float.NaN),
                         /* condition */ attributes.getValue("text"),
-                        /* conditionCode */ (int) stringToFloat(attributes.getValue("code"), -1));
+                        /* conditionCode */ (int) stringToFloat(attributes.getValue("code"), -1),
+                        /* rain */ 0,
+                        /* snow */ 0);
                 if (!Float.isNaN(day.low) && !Float.isNaN(day.high) && day.conditionCode >= 0) {
                     forecasts.add(day);
                 }

@@ -17,6 +17,8 @@
 
     <!-- General -->
 	<string name="app_name">DK Weather Service</string>
+
+    <!-- Settings -->
 	<string name="weather_settings_title">Weather settings</string>
 
     <!-- Condition image type -->
@@ -24,6 +26,10 @@
 	<string name="image_type_monochrome">Monochrome</string>
 	<string name="image_type_colored">Colored</string>
 	<string name="image_type_vclouds">VClouds</string>
+
+    <!-- Forcast dialog -->
+	<string name="precipitation_unit_1h_title">&#160;mm/h</string>
+	<string name="precipitation_unit_3h_title">&#160;mm/3h</string>
 
     <!-- CyanogenMod additions -->
 
