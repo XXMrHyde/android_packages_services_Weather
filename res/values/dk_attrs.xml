@@ -15,15 +15,8 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-	<string-array name="condition_image_type_entries" translatable="false">
-		<item>@string/image_type_monochrome</item>
-		<item>@string/image_type_colored</item>
-		<item>@string/image_type_vclouds</item>
-	</string-array>
-
-	<string-array name="condition_image_type_values" translatable="false">
-		<item>0</item>
-		<item>1</item>
-		<item>2</item>
-	</string-array>
+    <attr name="contentBackground" format="reference" />
+    <attr name="contentTextColorPrimary" format="reference" />
+    <attr name="contentTextColorSecondary" format="reference" />
+    <attr name="conditionImageTint" format="reference" />
 </resources>

@@ -15,10 +15,16 @@
 #
 
 LOCAL_PATH := $(call my-dir)
-
 include $(CLEAR_VARS)
+
 LOCAL_JAVA_LIBRARIES := org.apache.http.legacy
+
+LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4
+
 LOCAL_SRC_FILES := $(call all-subdir-java-files)
+
 LOCAL_PACKAGE_NAME := DKWeatherService
+
 LOCAL_MODULE_TAGS := optional
+
 include $(BUILD_PACKAGE)

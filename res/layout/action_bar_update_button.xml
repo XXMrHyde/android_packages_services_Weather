@@ -13,13 +13,20 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="tab_font_family" translatable="false">sans-serif</string>
-    <string name="no_value" translatable="false">-</string>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/update_button_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/action_bar_item_background_material">
 
-    <!-- CyanogenMod additions -->
+    <ImageView
+        android:id="@+id/update_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:tint="@color/action_bar_icon_tint"
+        android:src="@drawable/ic_menu_update"
+        android:scaleType="centerInside" />
 
-    <!-- Forecast unavailable -->
-    <string name="weather_3200" translatable="false"></string>
-</resources>
+</LinearLayout>

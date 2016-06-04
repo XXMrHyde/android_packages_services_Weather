@@ -130,7 +130,7 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
         try {
             SAXParser parser = factory.newSAXParser();
             StringReader reader = new StringReader(response);
-            WeatherHandler handler = new WeatherHandler();
+            WeatherHandler handler = new WeatherHandler(mContext);
             parser.parse(new InputSource(reader), handler);
 
             if (handler.isComplete()) {
@@ -146,7 +146,7 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                         handler.city,
                         handler.condition, handler.conditionCode, handler.temperature,
                         handler.temperatureUnit, handler.humidity, handler.windSpeed,
-                        handler.windDirection, handler.speedUnit, 0, 0, 0, 0, handler.forecasts,
+                        handler.windDirection, handler.speedUnit, 0, 0, 0, 0, 0, handler.forecasts,
                         System.currentTimeMillis());
                 log(TAG, "Weather updated: " + w);
                 return w;
@@ -165,12 +165,17 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
     }
 
     private static class WeatherHandler extends DefaultHandler {
+        Context context;
         String city;
         String temperatureUnit, speedUnit;
         int windDirection, conditionCode;
         float humidity, temperature, windSpeed;
         String condition;
         ArrayList<DayForecast> forecasts = new ArrayList<DayForecast>();
+
+        public WeatherHandler(Context context) {
+            this.context = context;
+        }
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes)
@@ -190,11 +195,17 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                 conditionCode = (int) stringToFloat(attributes.getValue("code"), -1);
                 temperature = stringToFloat(attributes.getValue("temp"), Float.NaN);
             } else if (qName.equals("yweather:forecast")) {
-                DayForecast day = new DayForecast(
-                        /* low */ stringToFloat(attributes.getValue("low"), Float.NaN),
-                        /* high */ stringToFloat(attributes.getValue("high"), Float.NaN),
+                DayForecast day = new DayForecast(context,
                         /* condition */ attributes.getValue("text"),
                         /* conditionCode */ (int) stringToFloat(attributes.getValue("code"), -1),
+                        /* low */ stringToFloat(attributes.getValue("low"), Float.NaN),
+                        /* high */ stringToFloat(attributes.getValue("high"), Float.NaN),
+                        temperatureUnit,
+                        /* humidity */ -1,
+                        /* wind */ 0,
+                        /* windDir */ 0,
+                        speedUnit,
+                        /* pressure */ 0,
                         /* rain */ 0,
                         /* snow */ 0);
                 if (!Float.isNaN(day.low) && !Float.isNaN(day.high) && day.conditionCode >= 0) {
