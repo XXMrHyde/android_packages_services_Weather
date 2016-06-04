@@ -122,7 +122,8 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
             JSONObject snowData = conditions.has("snow") ? conditions.getJSONObject("snow") : null;
             ArrayList<DayForecast> forecasts =
                     parseForecasts(new JSONObject(forecastResponse).getJSONArray("list"), metric);
-            int speedUnitResId = metric ? R.string.weather_kph : R.string.weather_mph;
+            int tempUnitResId = metric ? R.string.temp_celsius_unit_title : R.string.temp_fahrenheit_unit_title;
+            int speedUnitResId = metric ? R.string.speed_kph_unit_title : R.string.speed_mph_unit_title;
             String localizedCityName = conditions.getString("name");
 
             WeatherInfo w = new WeatherInfo(mContext, conditions.getString("id"), localizedCityName,
@@ -130,11 +131,12 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                     /* conditionCode */ mapConditionIconToCode(
                             weather.getString("icon"), weather.getInt("id")),
                     /* temperature */ sanitizeTemperature(conditionData.getDouble("temp"), metric),
-                    /* tempUnit */ metric ? "C" : "F",
+                    /* tempUnit */ mContext.getString(tempUnitResId),
                     /* humidity */ (float) conditionData.getDouble("humidity"),
                     /* wind */ (float) windData.getDouble("speed"),
                     /* windDir */ windData.has("deg") ? windData.getInt("deg") : 0,
                     /* speedUnit */ mContext.getString(speedUnitResId),
+                    /* pressure */ (float) conditionData.getDouble("pressure"),
                     /* rain1h */ rainData == null ? 0 : rainData.has("1h") ? (float) rainData.getDouble("1h") : 0,
                     /* rain3h */ rainData == null ? 0 : rainData.has("3h") ? (float) rainData.getDouble("3h") : 0,
                     /* snow1h */ snowData == null ? 0 : snowData.has("1h") ? (float) snowData.getDouble("1h") : 0,
@@ -165,21 +167,36 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                 JSONObject forecast = forecasts.getJSONObject(i);
                 JSONObject temperature = forecast.getJSONObject("temp");
                 JSONObject data = forecast.getJSONArray("weather").getJSONObject(0);
-                item = new DayForecast(
-                        /* low */ sanitizeTemperature(temperature.getDouble("min"), metric),
-                        /* high */ sanitizeTemperature(temperature.getDouble("max"), metric),
+                int tempUnitResId = metric ? R.string.temp_celsius_unit_title : R.string.temp_fahrenheit_unit_title;
+                int speedUnitResId = metric ? R.string.speed_kph_unit_title : R.string.speed_mph_unit_title;
+                item = new DayForecast(mContext,
                         /* condition */ data.getString("main"),
                         /* conditionCode */ mapConditionIconToCode(
                                 data.getString("icon"), data.getInt("id")),
+                        /* low */ sanitizeTemperature(temperature.getDouble("min"), metric),
+                        /* high */ sanitizeTemperature(temperature.getDouble("max"), metric),
+                        /* tempUnit */ mContext.getString(tempUnitResId),
+                        /* humidity */ (float) forecast.getDouble("humidity"),
+                        /* wind */ (float) forecast.getDouble("speed"),
+                        /* windDir */ forecast.has("deg") ? forecast.getInt("deg") : 0,
+                        /* speedUnit */ mContext.getString(speedUnitResId),
+                        /* pressure */ (float) forecast.getDouble("pressure"),
                         /* rain */ forecast.has("rain") ? (float) forecast.getDouble("rain") : 0,
                         /* snow */ forecast.has("snow") ? (float) forecast.getDouble("snow") : 0);
             } catch (JSONException e) {
                 Log.w(TAG, "Invalid forecast for day " + i + " creating dummy", e);
                 item = new DayForecast(
-                        /* low */ 0,
-                        /* high */ 0,
+                        mContext,
                         /* condition */ "",
                         /* conditionCode */ -1,
+                        /* low */ 0,
+                        /* high */ 0,
+                        /* tempUnit */ "",
+                        /* humidity */  0,
+                        /* wind */ 0,
+                        /* windDir */ 0,
+                        /* speedUnit */ "",
+                        /* pressure */ 0,
                         /* rain */ 0,
                         /* snow */ 0);
             }

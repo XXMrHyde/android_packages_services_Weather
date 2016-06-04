@@ -18,24 +18,28 @@
     <!-- General -->
 	<string name="app_name">DK Wetter Dienst</string>
 
-    <!-- Settings -->
-	<string name="weather_settings_title">Wetter Einstellungen</string>
+    <!-- Action bar -->
+	<string name="action_bar_current_title">Wetter</string>
+	<string name="action_bar_forecast_title">Wettervorhersage</string>
+	<string name="update_weather">Wetter aktuallisieren</string>
+	<string name="weather_updated">Wetterdaten wurden aktuallisiert</string>
 
-    <!-- Condition image type -->
-	<string name="condition_image_type_title">Vorhersage Dialog Wetter Symbol</string>
-	<string name="image_type_monochrome">Einfarbig</string>
-	<string name="image_type_colored">Farbig</string>
-	<string name="image_type_vclouds">VClouds</string>
-
-    <!-- Forcast dialog -->
+    <!-- Units -->
+    <string name="temp_celsius_unit_title">C</string>
+    <string name="temp_fahrenheit_unit_title">F</string>
+    <string name="speed_kph_unit_title">&#160;km/h</string>
+    <string name="speed_mph_unit_title">&#160;mi/h</string>
+    <string name="pressure_unit_title">&#160;hPa</string>
 	<string name="precipitation_unit_1h_title">&#160;mm/h</string>
 	<string name="precipitation_unit_3h_title">&#160;mm/3h</string>
+
+    <!-- Settings -->
+	<string name="weather_settings_title">Wetter Einstellungen</string>
 
     <!-- CyanogenMod additions -->
 
     <!-- General -->
     <string name="unknown">Unbekannt</string>
-    <string name="menu_done">Fertig</string>
 
     <!-- Weather - Weather codes -->
     <string name="weather_0">Tornado</string>
@@ -94,6 +98,13 @@
     <string name="weather_46">Schneeschauer</string>
     <string name="weather_47">Vereinzelte Gewitter</string>
 
-    <!-- Weather - Speed units -->
-    <string name="weather_kph">km/h</string>
+    <!-- Weather - Wind directions -->
+    <string name="weather_N">N</string>
+    <string name="weather_NE">NO</string>
+    <string name="weather_E">O</string>
+    <string name="weather_SE">SO</string>
+    <string name="weather_S">S</string>
+    <string name="weather_SW">SW</string>
+    <string name="weather_W">W</string>
+    <string name="weather_NW">NW</string>
 </resources>

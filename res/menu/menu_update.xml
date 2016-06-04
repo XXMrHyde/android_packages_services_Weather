@@ -13,13 +13,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="tab_font_family" translatable="false">sans-serif</string>
-    <string name="no_value" translatable="false">-</string>
-
-    <!-- CyanogenMod additions -->
-
-    <!-- Forecast unavailable -->
-    <string name="weather_3200" translatable="false"></string>
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/item_update"
+        android:title="@string/update_weather"
+        android:actionLayout="@layout/action_bar_update_button"
+        android:showAsAction="always">
+    </item>
+</menu>

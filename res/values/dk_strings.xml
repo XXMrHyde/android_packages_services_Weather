@@ -18,24 +18,28 @@
     <!-- General -->
 	<string name="app_name">DK Weather Service</string>
 
-    <!-- Settings -->
-	<string name="weather_settings_title">Weather settings</string>
+    <!-- Action bar -->
+	<string name="action_bar_current_title">Weather</string>
+	<string name="action_bar_forecast_title">Weather forecast</string>
+	<string name="update_weather">Update Weather</string>
+	<string name="weather_updated">Weather data has been updated</string>
 
-    <!-- Condition image type -->
-	<string name="condition_image_type_title">Forcast dialog weather image</string>
-	<string name="image_type_monochrome">Monochrome</string>
-	<string name="image_type_colored">Colored</string>
-	<string name="image_type_vclouds">VClouds</string>
-
-    <!-- Forcast dialog -->
+    <!-- Units -->
+    <string name="temp_celsius_unit_title">C</string>
+    <string name="temp_fahrenheit_unit_title">F</string>
+    <string name="speed_kph_unit_title">&#160;kph</string>
+    <string name="speed_mph_unit_title">&#160;mph</string>
+    <string name="pressure_unit_title">&#160;hPa</string>
 	<string name="precipitation_unit_1h_title">&#160;mm/h</string>
 	<string name="precipitation_unit_3h_title">&#160;mm/3h</string>
+
+    <!-- Settings -->
+	<string name="weather_settings_title">Weather settings</string>
 
     <!-- CyanogenMod additions -->
 
     <!-- General -->
     <string name="unknown">Unknown</string>
-    <string name="menu_done">Done</string>
 
     <!-- Weather codes -->
     <string name="weather_0">Tornado</string>
@@ -93,10 +97,6 @@
     <string name="weather_45">Thundershowers</string>
     <string name="weather_46">Snow Showers</string>
     <string name="weather_47">Isolated Thundershowers</string>
-
-    <!-- Weather - Speed units -->
-    <string name="weather_kph">kph</string>
-    <string name="weather_mph">mph</string>
 
     <!-- Weather - Wind directions -->
     <string name="weather_N">N</string>
