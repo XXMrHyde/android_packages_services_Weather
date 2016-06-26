@@ -22,31 +22,26 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.KeyguardManager;
-import android.app.WallpaperManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.database.ContentObserver;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.text.format.DateFormat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.LinearInterpolator;
@@ -63,7 +58,6 @@ import com.android.internal.util.darkkat.DetailedWeatherHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -90,6 +84,9 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
     private ContentResolver mResolver;
     private WeatherObserver mWeatherObserver;
 
+    private WeatherInfo mWeatherInfo;
+
+    private ArrayList<String> mToolbarSubTitles = new ArrayList<String>();
     private ViewPager mTabPager;
     private ViewPagerTabs mViewPagerTabs;
     private TabPagerAdapter mTabPagerAdapter;
@@ -118,14 +115,14 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
 
         @Override
         public void onChange(boolean selfChange) {
-        WeatherInfo weather = getWeather();
             if (getWeather() == null) {
                 Log.e(TAG, "Error retrieving forecast data");
                 if (mUpdateRequested) {
                     mUpdateRequested = false;
                 }
             } else {
-                updateWeather(getWeather());
+                mWeatherInfo = getWeather();
+                updateWeather();
                 if (mUpdateRequested) {
                     showToast(R.string.weather_updated);
                     mUpdateRequested = false;
@@ -159,7 +156,10 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
         updateButtonLayout.setOnLongClickListener(this);
         if (customizeColors) {
             final int iconColor = DetailedWeatherHelper.getActionBarIconColor(this);
+            final int rippleColor = DetailedWeatherHelper.getActionBarRippleColor(this);
             mUpdateButton.setImageTintList(ColorStateList.valueOf(iconColor));
+            ((RippleDrawable) updateButtonLayout.getBackground())
+                    .setColor(ColorStateList.valueOf(rippleColor));
         }
 
         return true;
@@ -185,12 +185,12 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
     }
 
     private void updateWeatherView() {
-        WeatherInfo weather = getWeather();
-        if (weather == null) {
+        if (getWeather() == null) {
             Log.e(TAG, "Error retrieving forecast data, exiting");
             finish();
             return;
         }
+        mWeatherInfo = getWeather();
         setTheme(getCustomThemeResId());
         setContentView(R.layout.detailed_weather_main);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -198,22 +198,21 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
         final FragmentManager fragmentManager = getFragmentManager();
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(DateFormat.getTimeFormat(this).format(weather.getTimestamp()));
-        TimeZone MyTimezone = TimeZone.getDefault();
-        Calendar calendar = new GregorianCalendar(MyTimezone);
-
-        mTabTitles = new String[6];
-        mTabTitles[0] = sb.toString();
-        mTabTitles[1] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        mTabTitles[2] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        mTabTitles[3] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        mTabTitles[4] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        mTabTitles[5] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+        TimeZone myTimezone = TimeZone.getDefault();
+        Calendar calendar = new GregorianCalendar(myTimezone);
+        mTabTitles = new String[5];
+        for (int i = 0; i <mTabTitles.length; i++) {
+            if (i == 0) {
+                mToolbarSubTitles.add(WeatherInfo.getFormattedDate(calendar.getTime(), false));
+                mTabTitles[i] = getResources().getString(R.string.today_title);
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
+            } else {
+                mToolbarSubTitles.add(WeatherInfo.getFormattedDate(calendar.getTime(), false));
+                mTabTitles[i] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG,
+                        Locale.getDefault());
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
+            }
+        }
 
         mTabPager = (ViewPager) findViewById(R.id.tab_pager);
         mTabPagerAdapter = new TabPagerAdapter();
@@ -221,8 +220,8 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
         mTabPager.setOnPageChangeListener(mTabPagerListener);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(getResources().getString(R.string.action_bar_current_title));
-        mToolbar.setSubtitle(weather.getCity());
+        mToolbar.setTitle(getResources().getString(R.string.action_bar_current_title) + ", " + mWeatherInfo.getCity());
+        mToolbar.setSubtitle(mToolbarSubTitles.get(0));
 
         final boolean customizeColors = DetailedWeatherHelper.customizeColors(this);
         if (customizeColors) {
@@ -241,14 +240,23 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
         mViewPagerTabs = (ViewPagerTabs) findViewById(R.id.lists_pager_header);
         mViewPagerTabs.setViewPager(mTabPager);
 
+        Bundle b = getIntent().getExtras();
+        int day = 0;
+        if (b != null) {
+            day = getTabPositionForTextDirection(b.getInt(DetailedWeatherHelper.DAY_INDEX));
+        }
+        if (day != 0) {
+            mTabPager.setCurrentItem(day, false);
+        }
+
         mCurrentWeatherFragment = (CurrentWeatherFragment)
                 fragmentManager.findFragmentByTag(CURRENT_WEATHER_TAG);
         if (mCurrentWeatherFragment == null) {
             mCurrentWeatherFragment = new CurrentWeatherFragment();
             transaction.add(R.id.tab_pager, mCurrentWeatherFragment, CURRENT_WEATHER_TAG);
 
-            mForecastWeatherFragments = new ForecastWeatherFragment[5];
-            for (int i=0; i<mForecastWeatherFragments.length; i++) {
+            mForecastWeatherFragments = new ForecastWeatherFragment[4];
+            for (int i = 0; i < mForecastWeatherFragments.length; i++) {
                 mForecastWeatherFragments[i] = new ForecastWeatherFragment();
                 transaction.add(R.id.tab_pager, mForecastWeatherFragments[i], FORECAST_WEATHER_TAG + String.valueOf(i));
             }
@@ -257,37 +265,45 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
         transaction.commitAllowingStateLoss();
         fragmentManager.executePendingTransactions();
 
-        for (int i=0; i<mForecastWeatherFragments.length; i++) {
-            mForecastWeatherFragments[i].setForecastDay(i);
+        ArrayList<String> days = mWeatherInfo.getHourForecastDays();
+        mCurrentWeatherFragment.setForecastDay(days.get(0));
+        for (int i = 0; i < mForecastWeatherFragments.length; i++) {
+            mForecastWeatherFragments[i].setForecastDay(days.get(i + 1));
+            mForecastWeatherFragments[i].setDayForecastIndex(i + 1);
         }
         mWeatherObserver.observe();
     }
 
-    private void updateWeather(WeatherInfo weather) {
+    private void updateWeather() {
         if (mViewPagerTabs != null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(DateFormat.getTimeFormat(this).format(weather.getTimestamp()));
-            TimeZone MyTimezone = TimeZone.getDefault();
-            Calendar calendar = new GregorianCalendar(MyTimezone);
-
-            mTabTitles[0] = sb.toString();
-            mTabTitles[1] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            mTabTitles[2] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            mTabTitles[3] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            mTabTitles[4] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            mTabTitles[5] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+            TimeZone myTimezone = TimeZone.getDefault();
+            Calendar calendar = new GregorianCalendar(myTimezone);
+            for (int i = 0; i <mTabTitles.length; i++) {
+                if (i == 0) {
+                    mToolbarSubTitles.add(WeatherInfo.getFormattedDate(calendar.getTime(), false));
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                } else {
+                    mToolbarSubTitles.add(WeatherInfo.getFormattedDate(calendar.getTime(), false));
+                    mTabTitles[i] = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG,
+                            Locale.getDefault());
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                }
+            }
+            mToolbar.setTitle(getResources().getString(R.string.action_bar_current_title) + ", " + mWeatherInfo.getCity());
+            final int tabPosition = getTabPositionForTextDirection(mTabPager.getCurrentItem());
+            mToolbar.setSubtitle(mToolbarSubTitles.get(tabPosition));
             mViewPagerTabs.setTabTitles(mTabTitles);
-        }
-        if (mCurrentWeatherFragment != null) {
-            mCurrentWeatherFragment.updateWeather();
-        }
-        if (mForecastWeatherFragments != null) {
-            for (int i=0; i<mForecastWeatherFragments.length; i++) {
-                mForecastWeatherFragments[i].updateWeather();
+            ArrayList<String> days = mWeatherInfo.getHourForecastDays();
+            if (mCurrentWeatherFragment != null) {
+                mCurrentWeatherFragment.setForecastDay(days.get(0));
+                mCurrentWeatherFragment.updateWeather(mWeatherInfo);
+            }
+            if (mForecastWeatherFragments != null) {
+                for (int i = 0; i < mForecastWeatherFragments.length; i++) {
+                    mForecastWeatherFragments[i].setForecastDay(days.get(i + 1));
+                    mForecastWeatherFragments[i].setDayForecastIndex(i + 1);
+                    mForecastWeatherFragments[i].updateWeather(mWeatherInfo);
+                }
             }
         }
     }
@@ -363,7 +379,7 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
 
         @Override
         public int getCount() {
-            return 6;
+            return 5;
         }
 
         @Override
@@ -371,7 +387,7 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
             if (object == mCurrentWeatherFragment) {
                     return getTabPositionForTextDirection(0);
             }
-            for (int i=0; i<mForecastWeatherFragments.length; i++) {
+            for (int i = 0; i < mForecastWeatherFragments.length; i++) {
                 if (object == mForecastWeatherFragments[i]) {
                     return getTabPositionForTextDirection(i + 1);
                 }
@@ -394,8 +410,6 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
             } else if (position == 3) {
                 return mForecastWeatherFragments[position - 1];
             } else if (position == 4) {
-                return mForecastWeatherFragments[position - 1];
-            } else if (position == 5) {
                 return mForecastWeatherFragments[position - 1];
             }
             throw new IllegalArgumentException("position: " + position);
@@ -494,8 +508,8 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
         public void onPageSelected(int position) {
             mViewPagerTabs.onPageSelected(position);
             if (mToolbar != null) {
-                mToolbar.setTitle(getResources().getString(position == 0 ?
-                        R.string.action_bar_current_title : R.string.action_bar_forecast_title));
+                final int tabPosition = getTabPositionForTextDirection(position);
+                mToolbar.setSubtitle(mToolbarSubTitles.get(tabPosition));
             }
         }
     }
@@ -510,7 +524,7 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
      */
     private int getTabPositionForTextDirection(int position) {
         if (isRTL()) {
-            return 6 - 1 - position;
+            return 5 - 1 - position;
         }
         return position;
     }

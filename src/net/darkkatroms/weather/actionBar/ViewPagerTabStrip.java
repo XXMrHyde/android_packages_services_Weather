@@ -49,12 +49,15 @@ public class ViewPagerTabStrip extends LinearLayout {
                 res.getDimensionPixelSize(R.dimen.tab_selected_underline_height);
 
         int backgroundColor;
+        int underlineColor = res.getColor(R.color.tab_selected_underline_color);
         if (customizeColors) {
             backgroundColor = DetailedWeatherHelper.getActionBarBgColor(context);
+            underlineColor = DetailedWeatherHelper.getActionBarIconColor(context);
         } else {
             backgroundColor = res.getColor(R.color.actionbar_background_color);
+            underlineColor = res.getColor(R.color.tab_selected_underline_color);
+
         }
-        int underlineColor = res.getColor(R.color.tab_selected_underline_color);
 
         mSelectedUnderlinePaint = new Paint();
         mSelectedUnderlinePaint.setColor(underlineColor);

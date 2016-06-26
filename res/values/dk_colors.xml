@@ -38,20 +38,28 @@
     <color name="actionbar_sub_text_color">#b3ffffff</color>
     <color name="actionbar_unselected_text_color">#b3ffffff</color>
 
-    <!-- Theme dark/light -->
-    <color name="content_text_color_primary_dark">#ffffffff</color>
-    <color name="content_text_color_secondary_dark">#b3ffffff</color>
-    <color name="condition_image_tint_dark">#ffffffff</color>
-    <color name="content_text_color_primary_light">#de000000</color>
-    <color name="content_text_color_secondary_light">#8a000000</color>
-    <color name="condition_image_tint_light">#8a000000</color>
+    <!-- Theme dark -->
+    <color name="card_background_dark">#ff424242</color>
+    <color name="card_divider_dark">#33ffffff</color>
+    <color name="card_text_color_primary_dark">#ffffffff</color>
+    <color name="card_text_color_secondary_dark">#b3ffffff</color>
+    <color name="card_icon_color_dark">#ffffffff</color>
+    <color name="card_ripple_color_dark">#33ffffff</color>
 
     <!-- Theme darkkat -->
     <color name="color_background">#ff1b1f23</color>
-    <color name="content_text_color_primary_darkkat">#ff33b5e5</color>
-    <color name="content_text_color_secondary_darkkat">#b333b5e5</color>
-    <color name="condition_image_tint_darkkat">#ff33b5e5</color>
+    <color name="card_background_darkkat">#ff182C37</color>
+    <color name="card_divider_darkkat">#3333b5e5</color>
+    <color name="card_text_color_primary_darkkat">#ff33b5e5</color>
+    <color name="card_text_color_secondary_darkkat">#b333b5e5</color>
+    <color name="card_icon_color_darkkat">#ff33b5e5</color>
+    <color name="card_ripple_color_darkkat">#3333b5e5</color>
 
-    <!-- CyanogenMod additions -->
-    <color name="text_shadow_opaque">#3f000000</color>
+    <!-- Theme light -->
+    <color name="card_background_light">#ffffffff</color>
+    <color name="card_divider_light">#1f000000</color>
+    <color name="card_text_color_primary_light">#de000000</color>
+    <color name="card_text_color_secondary_light">#8a000000</color>
+    <color name="card_icon_color_light">#8a000000</color>
+    <color name="card_ripple_color_light">#1f000000</color>
 </resources>

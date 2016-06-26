@@ -45,16 +45,22 @@
         <item name="android:actionBarTabBarStyle">@style/DetailedWeatherActionBarTabBarStyle</item>
         <item name="android:actionBarTabTextStyle">@style/DetailedWeatherActionBarTabTextStyle</item>
         <item name="contentBackground">?android:attr/colorBackground</item>
-        <item name="contentTextColorPrimary">@color/content_text_color_primary_dark</item>
-        <item name="contentTextColorSecondary">@color/content_text_color_secondary_dark</item>
-        <item name="conditionImageTint">@color/condition_image_tint_dark</item>
+        <item name="cardBackgroundTint">@color/card_background_dark</item>
+        <item name="cardDividerColor">@color/card_divider_dark</item>
+        <item name="cardTextColorPrimary">@color/card_text_color_primary_dark</item>
+        <item name="cardTextColorSecondary">@color/card_text_color_secondary_dark</item>
+        <item name="cardIconTint">@color/card_icon_color_dark</item>
+        <item name="cardRippleColor">@color/card_ripple_color_dark</item>
     </style>
 
     <style name="Theme.Material.DarkKat.DetailedWeather" parent="@style/Theme.Material.DetailedWeather">
         <item name="contentBackground">@color/color_background</item>
-        <item name="contentTextColorPrimary">@color/content_text_color_primary_darkkat</item>
-        <item name="contentTextColorSecondary">@color/content_text_color_secondary_darkkat</item>
-        <item name="conditionImageTint">@color/condition_image_tint_darkkat</item>
+        <item name="cardBackgroundTint">@color/card_background_darkkat</item>
+        <item name="cardDividerColor">@color/card_divider_darkkat</item>
+        <item name="cardTextColorPrimary">@color/card_text_color_primary_darkkat</item>
+        <item name="cardTextColorSecondary">@color/card_text_color_secondary_darkkat</item>
+        <item name="cardIconTint">@color/card_icon_color_darkkat</item>
+        <item name="cardRippleColor">@color/card_ripple_color_darkkat</item>
 
     </style>
 
@@ -67,8 +73,11 @@
         <item name="android:actionBarTabBarStyle">@style/DetailedWeatherActionBarTabBarStyle</item>
         <item name="android:actionBarTabTextStyle">@style/DetailedWeatherActionBarTabTextStyle</item>
         <item name="contentBackground">?android:attr/colorBackground</item>
-        <item name="contentTextColorPrimary">@color/content_text_color_primary_light</item>
-        <item name="contentTextColorSecondary">@color/content_text_color_secondary_light</item>
-        <item name="conditionImageTint">@color/condition_image_tint_light</item>
+        <item name="cardBackgroundTint">@color/card_background_light</item>
+        <item name="cardDividerColor">@color/card_divider_light</item>
+        <item name="cardTextColorPrimary">@color/card_text_color_primary_light</item>
+        <item name="cardTextColorSecondary">@color/card_text_color_secondary_light</item>
+        <item name="cardIconTint">@color/card_icon_color_light</item>
+        <item name="cardRippleColor">@color/card_ripple_color_light</item>
     </style>
 </resources>

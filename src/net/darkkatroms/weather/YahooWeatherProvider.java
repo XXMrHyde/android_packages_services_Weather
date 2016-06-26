@@ -29,6 +29,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import net.darkkatroms.weather.WeatherInfo.DayForecast;
+import net.darkkatroms.weather.WeatherInfo.HourForecast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -147,7 +148,7 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                         handler.condition, handler.conditionCode, handler.temperature,
                         handler.temperatureUnit, handler.humidity, handler.windSpeed,
                         handler.windDirection, handler.speedUnit, 0, 0, 0, 0, 0, handler.forecasts,
-                        System.currentTimeMillis());
+                        handler.hourForecasts, System.currentTimeMillis(), 0, 0);
                 log(TAG, "Weather updated: " + w);
                 return w;
             } else {
@@ -172,6 +173,7 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
         float humidity, temperature, windSpeed;
         String condition;
         ArrayList<DayForecast> forecasts = new ArrayList<DayForecast>();
+        ArrayList<HourForecast> hourForecasts = new ArrayList<HourForecast>();
 
         public WeatherHandler(Context context) {
             this.context = context;
@@ -195,11 +197,13 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                 conditionCode = (int) stringToFloat(attributes.getValue("code"), -1);
                 temperature = stringToFloat(attributes.getValue("temp"), Float.NaN);
             } else if (qName.equals("yweather:forecast")) {
+                float[] dayTemps = {0, 0, 0, 0};
                 DayForecast day = new DayForecast(context,
                         /* condition */ attributes.getValue("text"),
                         /* conditionCode */ (int) stringToFloat(attributes.getValue("code"), -1),
                         /* low */ stringToFloat(attributes.getValue("low"), Float.NaN),
                         /* high */ stringToFloat(attributes.getValue("high"), Float.NaN),
+                        dayTemps,
                         temperatureUnit,
                         /* humidity */ -1,
                         /* wind */ 0,
