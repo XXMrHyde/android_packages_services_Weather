@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Outline;
+import android.graphics.drawable.RippleDrawable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -177,7 +178,15 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         } else {
             mTabTitleViews[position] = new TextView(getContext());
             mTabTitleViews[position].setText(tabTitle);
-            mTabTitleViews[position].setBackgroundResource(R.drawable.view_pager_tab_background);
+
+            RippleDrawable bg = (RippleDrawable) getContext().getResources().getDrawable(
+                    R.drawable.view_pager_tab_background).mutate();
+            final boolean customizeColors = DetailedWeatherHelper.customizeColors(getContext());
+            if (customizeColors) {
+                final int rippleColor = DetailedWeatherHelper.getActionBarRippleColor(getContext());
+                bg.setColor(ColorStateList.valueOf(rippleColor));
+            }
+            mTabTitleViews[position].setBackground(bg);
 
             // Assign various text appearance related attributes to child views.
             if (mTextStyle > 0) {

@@ -16,7 +16,10 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <attr name="contentBackground" format="reference" />
-    <attr name="contentTextColorPrimary" format="reference" />
-    <attr name="contentTextColorSecondary" format="reference" />
-    <attr name="conditionImageTint" format="reference" />
+    <attr name="cardBackgroundTint" format="reference" />
+    <attr name="cardDividerColor" format="reference" />
+    <attr name="cardTextColorPrimary" format="reference" />
+    <attr name="cardTextColorSecondary" format="reference" />
+    <attr name="cardIconTint" format="reference" />
+    <attr name="cardRippleColor" format="reference" />
 </resources>

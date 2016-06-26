@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.darkkatroms.weather.WeatherInfo.DayForecast;
+import net.darkkatroms.weather.WeatherInfo.HourForecast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,13 +49,15 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
     private static final String URL_FORECAST =
             "http://api.openweathermap.org/data/2.5/forecast/daily?" +
             "%s&mode=json&units=%s&lang=%s&cnt=" + FORECAST_DAYS + "&appid=%s";
+    private static final String URL_HOUR_FORECAST =
+            "http://api.openweathermap.org/data/2.5/forecast?%s&mode=json&units=%s&lang=%s&appid=%s";
 
     public OpenWeatherMapProvider(Context context) {
         super(context);
     }
 
     public List<WeatherInfo.WeatherLocation> getLocations(String input) {
-        String url = String.format(URL_LOCATION, Uri.encode(input), getLanguageCode(), getAPIKey());
+        String url = String.format(URL_LOCATION, Uri.encode(input), getLanguageCode(), Config.getAPIKey(mContext));
         String response = retrieve(url);
         if (response == null) {
             return null;
@@ -99,19 +102,26 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
     private WeatherInfo handleWeatherRequest(String selection, boolean metric) {
         String units = metric ? "metric" : "imperial";
         String locale = getLanguageCode();
-        String conditionUrl = String.format(Locale.US, URL_WEATHER, selection, units, locale, getAPIKey());
+        String conditionUrl = String.format(Locale.US, URL_WEATHER, selection, units, locale, Config.getAPIKey(mContext));
         String conditionResponse = retrieve(conditionUrl);
         if (conditionResponse == null) {
             return null;
         }
         log(TAG, "Condition URL = " + conditionUrl + " returning a response of " + conditionResponse);
 
-        String forecastUrl = String.format(Locale.US, URL_FORECAST, selection, units, locale, getAPIKey());
+        String forecastUrl = String.format(Locale.US, URL_FORECAST, selection, units, locale, Config.getAPIKey(mContext));
         String forecastResponse = retrieve(forecastUrl);
         if (forecastResponse == null) {
             return null;
         }
-        log(TAG, "Forcast URL = " + forecastUrl + " returning a response of " + forecastResponse);
+        log(TAG, "Forecast URL = " + forecastUrl + " returning a response of " + forecastResponse);
+
+        String hourForecastUrl = String.format(Locale.US, URL_HOUR_FORECAST, selection, units, locale, Config.getAPIKey(mContext));
+        String hourForecastResponse = retrieve(hourForecastUrl);
+        if (hourForecastResponse == null) {
+            return null;
+        }
+        log(TAG, "Hour Forecast URL = " + hourForecastUrl + " returning a response of " + hourForecastResponse);
 
         try {
             JSONObject conditions = new JSONObject(conditionResponse);
@@ -120,8 +130,11 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
             JSONObject windData = conditions.getJSONObject("wind");
             JSONObject rainData = conditions.has("rain") ? conditions.getJSONObject("rain") : null;
             JSONObject snowData = conditions.has("snow") ? conditions.getJSONObject("snow") : null;
+            JSONObject sysData = conditions.getJSONObject("sys");
             ArrayList<DayForecast> forecasts =
                     parseForecasts(new JSONObject(forecastResponse).getJSONArray("list"), metric);
+            ArrayList<HourForecast> hourForecasts =
+                    parseHourForecasts(new JSONObject(hourForecastResponse).getJSONArray("list"), metric);
             int tempUnitResId = metric ? R.string.temp_celsius_unit_title : R.string.temp_fahrenheit_unit_title;
             int speedUnitResId = metric ? R.string.speed_kph_unit_title : R.string.speed_mph_unit_title;
             String localizedCityName = conditions.getString("name");
@@ -142,7 +155,10 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                     /* snow1h */ snowData == null ? 0 : snowData.has("1h") ? (float) snowData.getDouble("1h") : 0,
                     /* snow3h */ snowData == null ? 0 : snowData.has("3h") ? (float) snowData.getDouble("3h") : 0,
                     forecasts,
-                    System.currentTimeMillis());
+                    hourForecasts,
+                    System.currentTimeMillis(),
+                    /* sunrise */ sysData.getLong("sunrise"),
+                    /* sunset */ sysData.getLong("sunset"));
 
             log(TAG, "Weather updated: " + w);
             return w;
@@ -169,12 +185,18 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                 JSONObject data = forecast.getJSONArray("weather").getJSONObject(0);
                 int tempUnitResId = metric ? R.string.temp_celsius_unit_title : R.string.temp_fahrenheit_unit_title;
                 int speedUnitResId = metric ? R.string.speed_kph_unit_title : R.string.speed_mph_unit_title;
+                float[] dayTemps = {
+                    sanitizeTemperature(temperature.getDouble("morn"), metric),
+                    sanitizeTemperature(temperature.getDouble("day"), metric),
+                    sanitizeTemperature(temperature.getDouble("eve"), metric),
+                    sanitizeTemperature(temperature.getDouble("night"), metric) };
                 item = new DayForecast(mContext,
                         /* condition */ data.getString("main"),
                         /* conditionCode */ mapConditionIconToCode(
                                 data.getString("icon"), data.getInt("id")),
                         /* low */ sanitizeTemperature(temperature.getDouble("min"), metric),
                         /* high */ sanitizeTemperature(temperature.getDouble("max"), metric),
+                        dayTemps,
                         /* tempUnit */ mContext.getString(tempUnitResId),
                         /* humidity */ (float) forecast.getDouble("humidity"),
                         /* wind */ (float) forecast.getDouble("speed"),
@@ -185,12 +207,14 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                         /* snow */ forecast.has("snow") ? (float) forecast.getDouble("snow") : 0);
             } catch (JSONException e) {
                 Log.w(TAG, "Invalid forecast for day " + i + " creating dummy", e);
+                float[] dayTemps = {0, 0, 0, 0};
                 item = new DayForecast(
                         mContext,
                         /* condition */ "",
                         /* conditionCode */ -1,
                         /* low */ 0,
                         /* high */ 0,
+                        dayTemps,
                         /* tempUnit */ "",
                         /* humidity */  0,
                         /* wind */ 0,
@@ -199,6 +223,60 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                         /* pressure */ 0,
                         /* rain */ 0,
                         /* snow */ 0);
+            }
+            result.add(item);
+        }
+        return result;
+    }
+
+    private ArrayList<HourForecast> parseHourForecasts(JSONArray hourForecasts, boolean metric) throws JSONException {
+        ArrayList<HourForecast> result = new ArrayList<HourForecast>();
+        int count = hourForecasts.length();
+
+        if (count == 0) {
+            throw new JSONException("Empty HourForecast array");
+        }
+        for (int i = 0; i < count; i++) {
+            HourForecast item = null;
+            try {
+                JSONObject hourForecast = hourForecasts.getJSONObject(i);
+                JSONObject conditionData = hourForecast.getJSONObject("main");
+                JSONObject weather = hourForecast.getJSONArray("weather").getJSONObject(0);
+                JSONObject windData = hourForecast.getJSONObject("wind");
+                JSONObject rainData = hourForecast.has("rain") ? hourForecast.getJSONObject("rain") : null;
+                JSONObject snowData = hourForecast.has("snow") ? hourForecast.getJSONObject("snow") : null;
+                int tempUnitResId = metric ? R.string.temp_celsius_unit_title : R.string.temp_fahrenheit_unit_title;
+                int speedUnitResId = metric ? R.string.speed_kph_unit_title : R.string.speed_mph_unit_title;
+                item = new HourForecast(mContext,
+                        /* condition */ weather.getString("main"),
+                        /* conditionCode */ mapConditionIconToCode(
+                                weather.getString("icon"), weather.getInt("id")),
+                        /* temperature */ sanitizeTemperature(conditionData.getDouble("temp"), metric),
+                        /* tempUnit */ mContext.getString(tempUnitResId),
+                        /* humidity */ (float) conditionData.getDouble("humidity"),
+                        /* wind */ (float) windData.getDouble("speed"),
+                        /* windDir */ windData.has("deg") ? windData.getInt("deg") : 0,
+                        /* speedUnit */ mContext.getString(speedUnitResId),
+                        /* pressure */ (float) conditionData.getDouble("pressure"),
+                        /* rain3h */ rainData == null ? 0 : rainData.has("3h") ? (float) rainData.getDouble("3h") : 0,
+                        /* snow3h */ snowData == null ? 0 : snowData.has("3h") ? (float) snowData.getDouble("3h") : 0,
+                        /* timestamp */ hourForecast.getLong("dt"));
+            } catch (JSONException e) {
+                Log.w(TAG, "Invalid hourForecast time " + i + " creating dummy", e);
+                item = new HourForecast(
+                        mContext,
+                        /* condition */ "",
+                        /* conditionCode */ -1,
+                        /* temperature */ 0,
+                        /* tempUnit */ "",
+                        /* humidity */  0,
+                        /* wind */ 0,
+                        /* windDir */ 0,
+                        /* speedUnit */ "",
+                        /* pressure */ 0,
+                        /* rain */ 0,
+                        /* snow */ 0,
+                        /* timestamp */ 0);
             }
             result.add(item);
         }
@@ -364,9 +442,5 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
         }
 
         return -1;
-    }
-
-    private String getAPIKey() {
-        return mContext.getResources().getString(R.string.owm_api_key, API_KEY);
     }
 }

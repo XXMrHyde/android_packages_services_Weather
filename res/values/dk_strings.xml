@@ -20,9 +20,30 @@
 
     <!-- Action bar -->
 	<string name="action_bar_current_title">Weather</string>
-	<string name="action_bar_forecast_title">Weather forecast</string>
+	<string name="today_title">Today</string>
 	<string name="update_weather">Update Weather</string>
 	<string name="weather_updated">Weather data has been updated</string>
+
+    <!-- Detailed weather view -->
+	<string name="current_title">Current</string>
+	<string name="forecast_title">Forecast</string>
+	<string name="daytemps_title">Day temps</string>
+	<string name="morning_title">Morning:</string>
+	<string name="day_title">Daytime:</string>
+	<string name="evening_title">Evening:</string>
+	<string name="night_title">Night:</string>
+	<string name="min_title">Min. :</string>
+	<string name="max_title">Max. :</string>
+
+	<string name="precipitation_title">Precipitation:</string>
+	<string name="no_precipitation_value">None</string>
+	<string name="wind_title">Wind:</string>
+	<string name="sunrise_title">Sunrise:</string>
+	<string name="humidity_title">Humidity:</string>
+	<string name="pressure_title">Pressure:</string>
+	<string name="sunset_title">Sunset:</string>
+	<string name="expand_card">Show more</string>
+	<string name="collapse_card">Show less</string>
 
     <!-- Units -->
     <string name="temp_celsius_unit_title">C</string>
@@ -35,6 +56,10 @@
 
     <!-- Settings -->
 	<string name="weather_settings_title">Weather settings</string>
+	<string name="owm_api_key_title">Open Weather Map API key</string>
+	<string name="default_api_key_title">Default Darkkat API key</string>
+	<string name="custom_api_key_summary">Own API key</string>
+	<string name="owm_api_key_dlg_message">Enter the API key here, or delete API key, to use the default DarkKat API key</string>
 
     <!-- CyanogenMod additions -->
 

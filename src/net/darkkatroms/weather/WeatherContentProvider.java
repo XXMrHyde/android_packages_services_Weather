@@ -199,7 +199,7 @@ public class WeatherContentProvider extends ContentProvider {
                         .add(COLUMN_CURRENT_FORMATTED_RAIN3H, weather.getFormattedRain3H())
                         .add(COLUMN_CURRENT_FORMATTED_SNOW1H, weather.getFormattedSnow1H())
                         .add(COLUMN_CURRENT_FORMATTED_SNOW3H, weather.getFormattedSnow3H())
-                        .add(COLUMN_CURRENT_TIME_STAMP, weather.getTimestamp().toString());
+                        .add(COLUMN_CURRENT_TIME_STAMP, weather.getDate().toString());
 
 
                 // forecast

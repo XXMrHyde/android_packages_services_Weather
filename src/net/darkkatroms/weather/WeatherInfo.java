@@ -16,13 +16,19 @@
 
 package net.darkkatroms.weather;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.text.DecimalFormat;
 
 public class WeatherInfo {
     private static final DecimalFormat NO_DIGITS_FORMAT  = new DecimalFormat("0");
@@ -54,12 +60,16 @@ public class WeatherInfo {
     private final float mPressure;
     private final float mRain1H, mRain3H, mSnow1H, mSnow3H;
     private ArrayList<DayForecast> mForecasts;
+    private ArrayList<HourForecast> mHourForecasts;
     private final long mTimestamp;
+    private final long mSunrise;
+    private final long mSunset;
 
     public WeatherInfo(Context context, String id, String city, String condition,
             int conditionCode, float temp, String tempUnit, float humidity, float wind,
             int windDir, String speedUnit, float pressure, float rain1H, float rain3H,
-            float snow1H, float snow3H, ArrayList<DayForecast> forecasts, long timestamp) {
+            float snow1H, float snow3H, ArrayList<DayForecast> forecasts,
+            ArrayList<HourForecast> hourForecasts, long timestamp, long sunrise, long sunset) {
         mContext = context.getApplicationContext();
         mPressureUnit = mContext.getResources().getString(R.string.pressure_unit_title);
         mPrecipitationUnit1h = mContext.getResources().getString(R.string.precipitation_unit_1h_title);
@@ -81,7 +91,10 @@ public class WeatherInfo {
         mSnow1H = snow1H;
         mSnow3H = snow3H;
         mForecasts = forecasts;
+        mHourForecasts = hourForecasts;
         mTimestamp = timestamp;
+        mSunrise = sunrise;
+        mSunset = sunset;
     }
 
     public static class WeatherLocation {
@@ -97,6 +110,7 @@ public class WeatherInfo {
         public final String condition;
         public final int conditionCode;
         public final float low, high;
+        public final float[] dayTemps;
         public final String tempUnit;
         public final float humidity;
         public final float wind;
@@ -108,13 +122,14 @@ public class WeatherInfo {
         private final String precipitationUnit;
 
         public DayForecast(Context context, String condition, int conditionCode, float low, float high,
-                String tempUnit, float humidity, float wind, int windDir, String speedUnit,
+                float[] dayTemps, String tempUnit, float humidity, float wind, int windDir, String speedUnit,
                 float pressure, float rain, float snow) {
             this.context = context.getApplicationContext();
             this.condition = condition;
             this.conditionCode = conditionCode;
             this.low = low;
             this.high = high;
+            this.dayTemps = dayTemps;
             this.tempUnit = tempUnit;
             this.humidity = humidity;
             this.wind = wind;
@@ -151,6 +166,14 @@ public class WeatherInfo {
             return getFormattedTemperature(high, tempUnit);
         }
 
+        public String[] getFormattedDayTemps() {
+            String[] formattedDayTemps = new String[4];
+            for (int i = 0; i < 4; i++) {
+                formattedDayTemps[i] = getFormattedTemperature(dayTemps[i], tempUnit);
+            }
+            return formattedDayTemps;
+        }
+
         public String getFormattedHumidity() {
             return WeatherInfo.getFormattedHumidity(humidity);
         }
@@ -169,6 +192,95 @@ public class WeatherInfo {
 
         public String getFormattedSnow() {
             return getFormattedPrecipitation(snow, precipitationUnit);
+        }
+    }
+
+    public static class HourForecast {
+        public final Context context;
+        public final String condition;
+        public final int conditionCode;
+        public final float temperature;
+        public final String tempUnit;
+        public final float humidity;
+        public final float wind;
+        public final int windDirection;
+        public final String speedUnit;
+        public final float pressure;
+        public final String pressureUnit;
+        public final float rain, snow;
+        public final long timestamp;
+        private final String precipitationUnit;
+
+        public HourForecast(Context context, String condition, int conditionCode,
+                float temp, String tempUnit, float humidity, float wind, int windDir,
+                String speedUnit, float pressure, float rain, float snow, long timestamp) {
+            this.context = context.getApplicationContext();
+            this.condition = condition;
+            this.conditionCode = conditionCode;
+            this.temperature = temp;
+            this.tempUnit = tempUnit;
+            this.humidity = humidity;
+            this.wind = wind;
+            this.windDirection = windDir;
+            this.speedUnit = speedUnit;
+            this.pressure = pressure;
+            this.pressureUnit = context.getResources().getString(R.string.pressure_unit_title);
+            this.rain = rain;
+            this.snow = snow;
+            this.timestamp = timestamp;
+            this.precipitationUnit = context.getResources().getString(R.string.precipitation_unit_1h_title);
+        }
+
+        public String getCondition() {
+            return WeatherInfo.getCondition(context, conditionCode, condition);
+        }
+
+        public int getConditionCode() {
+            return conditionCode;
+        }
+
+        public String getFormattedTemperature() {
+            return WeatherInfo.getFormattedTemperature(temperature, tempUnit);
+        }
+
+        public String getFormattedHumidity() {
+            return WeatherInfo.getFormattedHumidity(humidity);
+        }
+
+        public String getFormattedWind() {
+            return WeatherInfo.getFormattedWind(context, wind, windDirection, speedUnit);
+        }
+
+        public String getFormattedPressure() {
+            return WeatherInfo.getFormattedPressure(pressure, pressureUnit);
+        }
+
+        public String getFormattedRain() {
+            return getFormattedPrecipitation(rain, precipitationUnit);
+        }
+
+        public String getFormattedSnow() {
+            return getFormattedPrecipitation(snow, precipitationUnit);
+        }
+
+        public Date getDate() {
+            return new Date(timestamp * 1000);
+        }
+
+        public String getFormattedDate() {
+            return WeatherInfo.getFormattedDate(getDate(), true);
+        }
+
+        public String getDay() {
+            Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+            calendar.setTime(getDate());
+            String day = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT,
+                    Locale.getDefault());
+            return day;
+        }
+
+        public String getTime() {
+            return WeatherInfo.getTime(getDate(), true);
         }
     }
 
@@ -240,8 +352,53 @@ public class WeatherInfo {
         return mForecasts;
     }
 
-    public Date getTimestamp() {
+    public ArrayList<HourForecast> getHourForecasts() {
+        return mHourForecasts;
+    }
+
+    public ArrayList<HourForecast> getHourForecastsDay(String d) {
+        ArrayList<HourForecast> day = new ArrayList<HourForecast>();
+        for (int i = 0; i < mHourForecasts.size(); i++) {
+            String s = mHourForecasts.get(i).getDay();
+            if (d.equals(s)) {
+                day.add(mHourForecasts.get(i));
+            }
+        }
+        return day;
+    }
+
+    public ArrayList<String> getHourForecastDays() {
+        ArrayList<String> days = new ArrayList<String>();
+        String day = mHourForecasts.get(0).getDay();
+        days.add(day);
+        for (int i = 0; i < mHourForecasts.size(); i++) {
+            String s = mHourForecasts.get(i).getDay();
+            if (!day.equals(s)) {
+                day = s;
+                days.add(day);
+            }
+        }
+        return days;
+    }
+
+    public Date getDate() {
         return new Date(mTimestamp);
+    }
+
+    public String getTime() {
+        return getTime(getDate(), false);
+    }
+
+    public String getFormattedDate() {
+        return getFormattedDate(getDate(), false);
+    }
+
+    public String getSunrise() {
+        return getTime(new Date(mSunrise * 1000), false);
+    }
+
+    public String getSunset() {
+        return getTime(new Date(mSunset * 1000) , false);
     }
 
     private static String getCondition(Context context, int conditionCode, String condition) {
@@ -357,6 +514,22 @@ public class WeatherInfo {
         }
     }
 
+    private static String getTime(Date date, boolean isUTC) {
+        SimpleDateFormat sdf = new SimpleDateFormat("H:mm", Locale.US);
+        if (isUTC) {
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        }
+        return sdf.format(date);
+    }
+
+    public static String getFormattedDate(Date date, boolean isUTC) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMMM yyyy", Locale.getDefault());
+        if (isUTC) {
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        }
+        return sdf.format(date);
+    }
+
     public Drawable getConditionIcon(int iconNameValue, int conditionCode) {
         String iconName;
 
@@ -386,7 +559,7 @@ public class WeatherInfo {
         builder.append(" (");
         builder.append(getId());
         builder.append(") @ ");
-        builder.append(getTimestamp());
+        builder.append(getDate());
         builder.append(": ");
         builder.append(getCondition());
         builder.append("(");
@@ -411,6 +584,10 @@ public class WeatherInfo {
         builder.append(getFormattedSnow1H());
         builder.append(", snow3H ");
         builder.append(getFormattedSnow3H());
+        builder.append(", sunrise ");
+        builder.append(getSunrise());
+        builder.append(", sunset ");
+        builder.append(getSunset());
         if (mForecasts.size() > 0) {
             builder.append(", forecasts:");
         }
@@ -424,11 +601,35 @@ public class WeatherInfo {
             builder.append("(").append(d.conditionCode).append(")");
             builder.append(", low ").append(d.getFormattedLow());
             builder.append(", high ").append(d.getFormattedHigh());
+            builder.append(", dayTemps: ");
+            builder.append(", morning ").append(d.getFormattedDayTemps()[0]);
+            builder.append(", day ").append(d.getFormattedDayTemps()[1]);
+            builder.append(", evening ").append(d.getFormattedDayTemps()[2]);
+            builder.append(", night ").append(d.getFormattedDayTemps()[3]);
             builder.append(", humidity ").append(d.getFormattedHumidity());
             builder.append(", wind ").append(d.getFormattedWind());
             builder.append(", pressure ").append(d.getFormattedPressure());
             builder.append(", rain ").append(d.getFormattedRain());
             builder.append(", snow ").append(d.getFormattedSnow());
+        }
+        if (mHourForecasts.size() > 0) {
+            builder.append(", hourForecasts:");
+        }
+        for (int i = 0; i < mHourForecasts.size(); i++) {
+            HourForecast h = mHourForecasts.get(i);
+            if (i != 0) {
+                builder.append(";");
+            }
+            builder.append(" time ").append(h.getTime()).append(": ");
+            builder.append(h.getCondition());
+            builder.append("(").append(h.conditionCode).append(")");
+            builder.append(", temp ").append(h.getFormattedTemperature());
+            builder.append(", humidity ").append(h.getFormattedHumidity());
+            builder.append(", wind ").append(h.getFormattedWind());
+            builder.append(", pressure ").append(h.getFormattedPressure());
+            builder.append(", rain ").append(h.getFormattedRain());
+            builder.append(", snow ").append(h.getFormattedSnow());
+            builder.append(", timestemp ").append(h.getFormattedSnow());
         }
         return builder.toString();
     }
@@ -451,6 +652,8 @@ public class WeatherInfo {
         builder.append(mSnow1H).append('|');
         builder.append(mSnow3H).append('|');
         builder.append(mTimestamp).append('|');
+        builder.append(mSunrise).append('|');
+        builder.append(mSunset).append('|');
         serializeForecasts(builder);
         return builder.toString();
     }
@@ -463,6 +666,10 @@ public class WeatherInfo {
             builder.append(d.conditionCode).append(';');
             builder.append(d.low).append(';');
             builder.append(d.high).append(';');
+            builder.append(d.dayTemps[0]).append(';');
+            builder.append(d.dayTemps[1]).append(';');
+            builder.append(d.dayTemps[2]).append(';');
+            builder.append(d.dayTemps[3]).append(';');
             builder.append(d.tempUnit).append(';');
             builder.append(d.humidity).append(';');
             builder.append(d.wind).append(';');
@@ -472,6 +679,27 @@ public class WeatherInfo {
             builder.append(d.rain).append(';');
             builder.append(d.snow);
         }
+        builder.append('|');
+        serializeHourForecasts(builder);
+    }
+
+    private void serializeHourForecasts(StringBuilder builder) {
+        builder.append(mHourForecasts.size());
+        for (HourForecast h : mHourForecasts) {
+            builder.append(';');
+            builder.append(h.condition).append(';');
+            builder.append(h.conditionCode).append(';');
+            builder.append(h.temperature).append(';');
+            builder.append(h.tempUnit).append(';');
+            builder.append(h.humidity).append(';');
+            builder.append(h.wind).append(';');
+            builder.append(h.windDirection).append(';');
+            builder.append(h.speedUnit).append(';');
+            builder.append(h.pressure).append(';');
+            builder.append(h.rain).append(';');
+            builder.append(h.snow).append(';');
+            builder.append(h.timestamp);
+        }
     }
 
     public static WeatherInfo fromSerializedString(Context context, String input) {
@@ -480,16 +708,21 @@ public class WeatherInfo {
         }
 
         String[] parts = input.split("\\|");
-        if (parts == null || parts.length != 17) {
+        if (parts == null || parts.length != 20) {
             return null;
         }
 
         int conditionCode, windDirection;
         long timestamp;
+        long sunrise;
+        long sunset;
         float temperature, humidity, wind, pressure, rain1H, rain3H, snow1H, snow3H;
-        String[] forecastParts = parts[16].split(";");
+        String[] forecastParts = parts[18].split(";");
+        String[] hourForecastParts = parts[19].split(";");
         int forecastItems;
+        int hourForecastItems;
         ArrayList<DayForecast> forecasts = new ArrayList<DayForecast>();
+        ArrayList<HourForecast> hourForecasts = new ArrayList<HourForecast>();
 
         // Parse the core data
         try {
@@ -504,32 +737,42 @@ public class WeatherInfo {
             snow1H = Float.parseFloat(parts[13]);
             snow3H = Float.parseFloat(parts[14]);
             timestamp = Long.parseLong(parts[15]);
+            sunrise = Long.parseLong(parts[16]);
+            sunset = Long.parseLong(parts[17]);
             forecastItems = forecastParts == null ? 0 : Integer.parseInt(forecastParts[0]);
+            hourForecastItems = hourForecastParts == null ? 0 : Integer.parseInt(hourForecastParts[0]);
         } catch (NumberFormatException e) {
             return null;
         }
 
-        if (forecastItems == 0 || forecastParts.length != 12 * forecastItems + 1) {
+        if (forecastItems == 0 || forecastParts.length != 16 * forecastItems + 1) {
             return null;
         }
 
         // Parse the forecast data
         try {
             for (int item = 0; item < forecastItems; item ++) {
-                int offset = item * 12 + 1;
+                int offset = item * 16 + 1;
+                float[] dayTemps = {
+                    Float.parseFloat(forecastParts[offset + 4]),
+                    Float.parseFloat(forecastParts[offset + 5]),
+                    Float.parseFloat(forecastParts[offset + 6]),
+                    Float.parseFloat(forecastParts[offset + 7])
+                };
                 DayForecast day = new DayForecast(context,
                         /* condition */ forecastParts[offset],
                         /* conditionCode */ Integer.parseInt(forecastParts[offset + 1]),
                         /* low */ Float.parseFloat(forecastParts[offset + 2]),
                         /* high */ Float.parseFloat(forecastParts[offset + 3]),
-                        /* tempUnit */ forecastParts[offset + 4],
-                        /* humidity */ Float.parseFloat(forecastParts[offset + 5]),
-                        /* wind */ Float.parseFloat(forecastParts[offset + 6]),
-                        /* windDirection */ Integer.parseInt(forecastParts[offset + 7]),
-                        /* speedUnit */ forecastParts[offset + 8],
-                        /* pressure */ Float.parseFloat(forecastParts[offset + 9]),
-                        /* rain */ Float.parseFloat(forecastParts[offset + 10]),
-                        /* snow */ Float.parseFloat(forecastParts[offset + 11]));
+                        dayTemps,
+                        /* tempUnit */ forecastParts[offset + 8],
+                        /* humidity */ Float.parseFloat(forecastParts[offset + 9]),
+                        /* wind */ Float.parseFloat(forecastParts[offset + 10]),
+                        /* windDirection */ Integer.parseInt(forecastParts[offset + 11]),
+                        /* speedUnit */ forecastParts[offset + 12],
+                        /* pressure */ Float.parseFloat(forecastParts[offset + 13]),
+                        /* rain */ Float.parseFloat(forecastParts[offset + 14]),
+                        /* snow */ Float.parseFloat(forecastParts[offset + 15]));
 
                 if (!Float.isNaN(day.low) && !Float.isNaN(day.high) && day.conditionCode >= 0) {
                     forecasts.add(day);
@@ -538,7 +781,36 @@ public class WeatherInfo {
         } catch (NumberFormatException ignored) {
         }
 
-        if (forecasts.isEmpty()) {
+        if (hourForecastItems == 0 || hourForecastParts.length != 12 * hourForecastItems + 1) {
+            return null;
+        }
+
+        // Parse the hourForecast data
+        try {
+            for (int itemH = 0; itemH < hourForecastItems; itemH ++) {
+                int offsetH = itemH * 12 + 1;
+                HourForecast h = new HourForecast(context,
+                        /* condition */ hourForecastParts[offsetH],
+                        /* conditionCode */ Integer.parseInt(hourForecastParts[offsetH + 1]),
+                        /* temperature */ Float.parseFloat(hourForecastParts[offsetH + 2]),
+                        /* tempUnit */ hourForecastParts[offsetH + 3],
+                        /* humidity */ Float.parseFloat(hourForecastParts[offsetH + 4]),
+                        /* wind */ Float.parseFloat(hourForecastParts[offsetH + 5]),
+                        /* windDirection */ Integer.parseInt(hourForecastParts[offsetH + 6]),
+                        /* speedUnit */ hourForecastParts[offsetH + 7],
+                        /* pressure */ Float.parseFloat(hourForecastParts[offsetH + 8]),
+                        /* rain */ Float.parseFloat(hourForecastParts[offsetH + 9]),
+                        /* snow */ Float.parseFloat(hourForecastParts[offsetH + 10]),
+                        /* timestamp */ Long.parseLong(hourForecastParts[offsetH + 11]));
+
+                if (!Float.isNaN(h.temperature) && h.conditionCode >= 0) {
+                    hourForecasts.add(h);
+                }
+            }
+        } catch (NumberFormatException ignored) {
+        }
+
+        if (hourForecasts.isEmpty()) {
             return null;
         }
 
@@ -546,6 +818,7 @@ public class WeatherInfo {
                 /* id */ parts[0], /* city */ parts[1], /* condition */ parts[2],
                 conditionCode, temperature, /* tempUnit */ parts[5],
                 humidity, wind, windDirection, /* speedUnit */ parts[9],
-                pressure, rain1H, rain3H, snow1H, snow3H, forecasts, timestamp);
+                pressure, rain1H, rain3H, snow1H, snow3H, forecasts, hourForecasts, timestamp,
+                sunrise, sunset);
     }
 }

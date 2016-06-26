@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -38,21 +39,22 @@ import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.view.MenuItem;
 
-public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener, WeatherLocationTask.Callback  {
+public class SettingsActivity extends PreferenceActivity implements
+        OnPreferenceChangeListener, WeatherLocationTask.Callback  {
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
 
-    private SharedPreferences mPrefs;
-    private ListPreference mProvider;
-    private CheckBoxPreference mCustomLocation;
-    //private CheckBoxPreference mAutoUpdates;
-    private ListPreference mUnits;
     private SwitchPreference mEnable;
-    private boolean mTriggerUpdate;
-    private boolean mTriggerPermissionCheck;
+//    private CheckBoxPreference mAutoUpdates;
     private ListPreference mUpdateInterval;
+//    private ListPreference mProvider;
+    private EditTextPreference mOWMApiKey;
+    private ListPreference mUnits;
+    private CheckBoxPreference mCustomLocation;
     private CustomLocationPreference mLocation;
 
-    private static final String PREF_KEY_CUSTOM_LOCATION_CITY = "weather_custom_location_city";
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
+    private SharedPreferences mPrefs;
+    private boolean mTriggerUpdate;
+    private boolean mTriggerPermissionCheck;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,23 +64,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
         addPreferencesFromResource(R.xml.settings);
 
+        int idx;
+
         mEnable = (SwitchPreference) findPreference(Config.PREF_KEY_ENABLE);
-        mCustomLocation = (CheckBoxPreference) findPreference(Config.PREF_KEY_CUSTOM_LOCATION);
         //mAutoUpdates = (CheckBoxPreference) findPreference(Config.PREF_KEY_AUTO_UPDATE);
-
-        mProvider = (ListPreference) findPreference(Config.PREF_KEY_PROVIDER);
-        mProvider.setOnPreferenceChangeListener(this);
-        int idx = mProvider.findIndexOfValue(mPrefs.getString(Config.PREF_KEY_PROVIDER,
-                mProvider.getEntryValues()[0].toString()));
-        mProvider.setValueIndex(idx);
-        mProvider.setSummary(mProvider.getEntries()[idx]);
-
-        mUnits = (ListPreference) findPreference(Config.PREF_KEY_UNITS);
-        mUnits.setOnPreferenceChangeListener(this);
-        idx = mUnits.findIndexOfValue(mPrefs.getString(Config.PREF_KEY_UNITS,
-                mUnits.getEntryValues()[0].toString()));
-        mUnits.setValueIndex(idx);
-        mUnits.setSummary(mUnits.getEntries()[idx]);
 
         mUpdateInterval = (ListPreference) findPreference(Config.PREF_KEY_UPDATE_INTERVAL);
         mUpdateInterval.setOnPreferenceChangeListener(this);
@@ -87,7 +76,33 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         mUpdateInterval.setValueIndex(idx);
         mUpdateInterval.setSummary(mUpdateInterval.getEntries()[idx]);
 
-        mLocation = (CustomLocationPreference) findPreference(PREF_KEY_CUSTOM_LOCATION_CITY);
+/*
+        mProvider = (ListPreference) findPreference(Config.PREF_KEY_PROVIDER);
+        mProvider.setOnPreferenceChangeListener(this);
+        idx = mProvider.findIndexOfValue(mPrefs.getString(Config.PREF_KEY_PROVIDER,
+                mProvider.getEntryValues()[0].toString()));
+        mProvider.setValueIndex(idx);
+        mProvider.setSummary(mProvider.getEntries()[idx]);
+ */
+
+        mOWMApiKey = (EditTextPreference) findPreference(Config.PREF_KEY_OWM_API_KEY);
+        mOWMApiKey.getEditText().setHint(getResources().getString(
+                R.string.default_api_key_title));
+        final int summaryResId = Config.getAPIKey(this).equals(Config.DEFAULT_OWM_API_KEY)
+                ? R.string.default_api_key_title : R.string.custom_api_key_summary;
+        mOWMApiKey.setSummary(getResources().getString(summaryResId));
+        mOWMApiKey.setOnPreferenceChangeListener(this);
+
+        mUnits = (ListPreference) findPreference(Config.PREF_KEY_UNITS);
+        mUnits.setOnPreferenceChangeListener(this);
+        idx = mUnits.findIndexOfValue(mPrefs.getString(Config.PREF_KEY_UNITS,
+                mUnits.getEntryValues()[0].toString()));
+        mUnits.setValueIndex(idx);
+        mUnits.setSummary(mUnits.getEntries()[idx]);
+
+        mCustomLocation = (CheckBoxPreference) findPreference(Config.PREF_KEY_CUSTOM_LOCATION);
+
+        mLocation = (CustomLocationPreference) findPreference(Config.PREF_KEY_CUSTOM_LOCATION_CITY);
         if (mPrefs.getBoolean(Config.PREF_KEY_ENABLE, false)
                 && !mPrefs.getBoolean(Config.PREF_KEY_CUSTOM_LOCATION, false)) {
             mTriggerUpdate = false;
@@ -121,13 +136,15 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
             }
             return true;
-        /*} else if (preference == mAutoUpdates) {
+/*
+        } else if (preference == mAutoUpdates) {
             if (mAutoUpdates.isChecked()) {
                 WeatherService.startUpdate(this, true);
             } else {
                 WeatherService.cancelUpdate(this);
             }
-            return true;*/
+            return true;
+ */
         } else if (preference == mEnable) {
             if (mEnable.isChecked()) {
                 if (!mCustomLocation.isChecked()) {
@@ -146,6 +163,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
+/*
         if (preference == mProvider) {
             String value = (String) newValue;
             int idx = mProvider.findIndexOfValue(value);
@@ -159,6 +177,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             }
             return true;
         } else if (preference == mUnits) {
+ */
+        if (preference == mUnits) {
             String value = (String) newValue;
             int idx = mUnits.findIndexOfValue(value);
             mUnits.setSummary(mUnits.getEntries()[idx]);
@@ -171,6 +191,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             mUpdateInterval.setSummary(mUpdateInterval.getEntries()[idx]);
             mUpdateInterval.setValueIndex(idx);
             WeatherService.scheduleUpdate(this);
+            return true;
+        } else if (preference == mOWMApiKey) {
+            String value = (String) newValue;
+            boolean isDefaultkey =
+                    value == null || value.isEmpty() || value.equals(Config.DEFAULT_OWM_API_KEY);
+            String summary = getResources().getString(isDefaultkey
+                    ? R.string.default_api_key_title : R.string.custom_api_key_summary);
+            preference.setSummary(summary);
             return true;
         }
         return false;
