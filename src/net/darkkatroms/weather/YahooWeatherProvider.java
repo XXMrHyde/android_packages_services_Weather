@@ -197,22 +197,17 @@ public class YahooWeatherProvider extends AbstractWeatherProvider  {
                 conditionCode = (int) stringToFloat(attributes.getValue("code"), -1);
                 temperature = stringToFloat(attributes.getValue("temp"), Float.NaN);
             } else if (qName.equals("yweather:forecast")) {
-                float[] dayTemps = {0, 0, 0, 0};
                 DayForecast day = new DayForecast(context,
                         /* condition */ attributes.getValue("text"),
                         /* conditionCode */ (int) stringToFloat(attributes.getValue("code"), -1),
                         /* low */ stringToFloat(attributes.getValue("low"), Float.NaN),
                         /* high */ stringToFloat(attributes.getValue("high"), Float.NaN),
-                        dayTemps,
-                        temperatureUnit,
-                        /* humidity */ -1,
-                        /* wind */ 0,
-                        /* windDir */ 0,
-                        speedUnit,
-                        /* pressure */ 0,
-                        /* rain */ 0,
-                        /* snow */ 0);
-                if (!Float.isNaN(day.low) && !Float.isNaN(day.high) && day.conditionCode >= 0) {
+                        /* morning */ 0,
+                        /* day */ 0,
+                        /* evening */ 0,
+                        /* night */ 0,
+                        temperatureUnit);
+                if (!Float.isNaN(day.low) && !Float.isNaN(day.high)) {
                     forecasts.add(day);
                 }
             }

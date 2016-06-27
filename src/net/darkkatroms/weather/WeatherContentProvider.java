@@ -82,16 +82,6 @@ public class WeatherContentProvider extends ContentProvider {
             "forecast_formatted_temperature_low";
     private static final String COLUMN_FORECAST_FORMATTED_TEMPERATURE_HIGH =
             "forecast_formatted_temperature_high";
-    private static final String COLUMN_FORECAST_FORMATTED_HUMIDITY =
-            "forecast_formatted_humidity";
-    private static final String COLUMN_FORECAST_FORMATTED_WIND =
-            "forecast_formatted_wind";
-    private static final String COLUMN_FORECAST_FORMATTED_PRESSURE =
-            "forecast_formatted_pressure";
-    private static final String COLUMN_FORECAST_FORMATTED_RAIN =
-            "forecast_formatted_rain";
-    private static final String COLUMN_FORECAST_FORMATTED_SNOW =
-            "forecast_formatted_snow";
 
     private static final String COLUMN_ENABLED = "enabled";
     private static final String COLUMN_PROVIDER = "provider";
@@ -122,12 +112,7 @@ public class WeatherContentProvider extends ContentProvider {
             COLUMN_FORECAST_TEMPERATURE_LOW,
             COLUMN_FORECAST_TEMPERATURE_HIGH,
             COLUMN_FORECAST_FORMATTED_TEMPERATURE_LOW,
-            COLUMN_FORECAST_FORMATTED_TEMPERATURE_HIGH,
-            COLUMN_FORECAST_FORMATTED_HUMIDITY,
-            COLUMN_FORECAST_FORMATTED_WIND,
-            COLUMN_FORECAST_FORMATTED_PRESSURE,
-            COLUMN_FORECAST_FORMATTED_RAIN,
-            COLUMN_FORECAST_FORMATTED_SNOW
+            COLUMN_FORECAST_FORMATTED_TEMPERATURE_HIGH
     };
 
     private static final String[] PROJECTION_DEFAULT_SETTINGS = new String[] {
@@ -210,12 +195,7 @@ public class WeatherContentProvider extends ContentProvider {
                             .add(COLUMN_FORECAST_TEMPERATURE_LOW, day.getLow())
                             .add(COLUMN_FORECAST_TEMPERATURE_HIGH, day.getHigh())
                             .add(COLUMN_FORECAST_FORMATTED_TEMPERATURE_LOW, day.getFormattedLow())
-                            .add(COLUMN_FORECAST_FORMATTED_TEMPERATURE_HIGH, day.getFormattedHigh())
-                            .add(COLUMN_FORECAST_FORMATTED_HUMIDITY, day.getFormattedHumidity())
-                            .add(COLUMN_FORECAST_FORMATTED_WIND, day.getFormattedWind())
-                            .add(COLUMN_FORECAST_FORMATTED_PRESSURE, day.getFormattedPressure())
-                            .add(COLUMN_FORECAST_FORMATTED_RAIN, day.getFormattedRain())
-                            .add(COLUMN_FORECAST_FORMATTED_SNOW, day.getFormattedSnow());
+                            .add(COLUMN_FORECAST_FORMATTED_TEMPERATURE_HIGH, day.getFormattedHigh());
                 }
                 return result;
             }
