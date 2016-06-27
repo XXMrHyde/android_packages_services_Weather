@@ -239,7 +239,12 @@ public class CurrentWeatherFragment extends Fragment {
         if (mWeatherInfo != null) {
             Drawable icon = mWeatherInfo.getConditionIcon(DetailedWeatherHelper.getConditionIconType(
                     getActivity()), mWeatherInfo.getConditionCode());
-            final String[] tempValues = mWeatherInfo.getForecasts().get(0).getFormattedDayTemps();
+            final String[] tempValues = {
+                mWeatherInfo.getForecasts().get(0).getFormattedMorning(),
+                mWeatherInfo.getForecasts().get(0).getFormattedDay(),
+                mWeatherInfo.getForecasts().get(0).getFormattedEvening(),
+                mWeatherInfo.getForecasts().get(0).getFormattedNight()
+            };
 
             mTime.setText(mWeatherInfo.getTime());
             mImage.setImageDrawable(icon);
@@ -287,7 +292,12 @@ public class CurrentWeatherFragment extends Fragment {
 
         Drawable icon = mWeatherInfo.getConditionIcon(DetailedWeatherHelper.getConditionIconType(
                 getActivity()), mWeatherInfo.getConditionCode());
-        final String[] tempValues = mWeatherInfo.getForecasts().get(0).getFormattedDayTemps();
+        final String[] tempValues = {
+            mWeatherInfo.getForecasts().get(0).getFormattedMorning(),
+            mWeatherInfo.getForecasts().get(0).getFormattedDay(),
+            mWeatherInfo.getForecasts().get(0).getFormattedEvening(),
+            mWeatherInfo.getForecasts().get(0).getFormattedNight()
+        };
 
         mTime.setText(mWeatherInfo.getTime());
         mImage.setImageDrawable(icon);

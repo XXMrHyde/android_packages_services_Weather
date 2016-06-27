@@ -184,45 +184,30 @@ public class OpenWeatherMapProvider extends AbstractWeatherProvider {
                 JSONObject temperature = forecast.getJSONObject("temp");
                 JSONObject data = forecast.getJSONArray("weather").getJSONObject(0);
                 int tempUnitResId = metric ? R.string.temp_celsius_unit_title : R.string.temp_fahrenheit_unit_title;
-                int speedUnitResId = metric ? R.string.speed_kph_unit_title : R.string.speed_mph_unit_title;
-                float[] dayTemps = {
-                    sanitizeTemperature(temperature.getDouble("morn"), metric),
-                    sanitizeTemperature(temperature.getDouble("day"), metric),
-                    sanitizeTemperature(temperature.getDouble("eve"), metric),
-                    sanitizeTemperature(temperature.getDouble("night"), metric) };
                 item = new DayForecast(mContext,
                         /* condition */ data.getString("main"),
                         /* conditionCode */ mapConditionIconToCode(
                                 data.getString("icon"), data.getInt("id")),
                         /* low */ sanitizeTemperature(temperature.getDouble("min"), metric),
+                        /* morning */ sanitizeTemperature(temperature.getDouble("morn"), metric),
+                        /* day */ sanitizeTemperature(temperature.getDouble("day"), metric),
+                        /* evening */ sanitizeTemperature(temperature.getDouble("eve"), metric),
+                        /* night */ sanitizeTemperature(temperature.getDouble("night"), metric),
                         /* high */ sanitizeTemperature(temperature.getDouble("max"), metric),
-                        dayTemps,
-                        /* tempUnit */ mContext.getString(tempUnitResId),
-                        /* humidity */ (float) forecast.getDouble("humidity"),
-                        /* wind */ (float) forecast.getDouble("speed"),
-                        /* windDir */ forecast.has("deg") ? forecast.getInt("deg") : 0,
-                        /* speedUnit */ mContext.getString(speedUnitResId),
-                        /* pressure */ (float) forecast.getDouble("pressure"),
-                        /* rain */ forecast.has("rain") ? (float) forecast.getDouble("rain") : 0,
-                        /* snow */ forecast.has("snow") ? (float) forecast.getDouble("snow") : 0);
+                        /* tempUnit */ mContext.getString(tempUnitResId));
             } catch (JSONException e) {
                 Log.w(TAG, "Invalid forecast for day " + i + " creating dummy", e);
-                float[] dayTemps = {0, 0, 0, 0};
                 item = new DayForecast(
                         mContext,
                         /* condition */ "",
                         /* conditionCode */ -1,
                         /* low */ 0,
+                        /* morning */ 0,
+                        /* day */ 0,
+                        /* evening */ 0,
+                        /* night */ 0,
                         /* high */ 0,
-                        dayTemps,
-                        /* tempUnit */ "",
-                        /* humidity */  0,
-                        /* wind */ 0,
-                        /* windDir */ 0,
-                        /* speedUnit */ "",
-                        /* pressure */ 0,
-                        /* rain */ 0,
-                        /* snow */ 0);
+                        /* tempUnit */ "");
             }
             result.add(item);
         }

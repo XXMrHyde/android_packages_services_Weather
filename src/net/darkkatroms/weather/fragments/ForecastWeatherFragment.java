@@ -136,8 +136,12 @@ public class ForecastWeatherFragment extends Fragment {
         if (mWeatherInfo != null && mCardsLayout != null && mForecastDay != null) {
             ArrayList<HourForecast> hourForecasts = mWeatherInfo.getHourForecastsDay(mForecastDay);
             if (hourForecasts.size() != 0) {
-                final String[] tempValues =
-                        mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedDayTemps();
+                final String[] tempValues = {
+                    mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedMorning(),
+                    mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedDay(),
+                    mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedEvening(),
+                    mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedNight()
+                };
                 for (int i = 0; i < mDayTempsValues.length; i++) {
                     mDayTempsValues[i].setText(tempValues[i]);
                 }
@@ -177,8 +181,12 @@ public class ForecastWeatherFragment extends Fragment {
         if (mCardsLayout != null && mForecastDay != null) {
             ArrayList<HourForecast> hourForecasts = mWeatherInfo.getHourForecastsDay(mForecastDay);
             if (hourForecasts.size() != 0) {
-                final String[] tempValues =
-                        mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedDayTemps();
+                final String[] tempValues = {
+                    mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedMorning(),
+                    mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedDay(),
+                    mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedEvening(),
+                    mWeatherInfo.getForecasts().get(mDayForecastIndex).getFormattedNight()
+                };
                 for (int i = 0; i < mDayTempsValues.length; i++) {
                     mDayTempsValues[i].setText(tempValues[i]);
                 }

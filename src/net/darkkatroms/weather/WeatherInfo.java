@@ -109,37 +109,26 @@ public class WeatherInfo {
         public final Context context;
         public final String condition;
         public final int conditionCode;
-        public final float low, high;
-        public final float[] dayTemps;
+        public final float low;
+        public final float morning;
+        public final float day;
+        public final float evening;
+        public final float night;
+        public final float high;
         public final String tempUnit;
-        public final float humidity;
-        public final float wind;
-        public final int windDirection;
-        public final String speedUnit;
-        public final float pressure;
-        public final String pressureUnit;
-        public final float rain, snow;
-        private final String precipitationUnit;
 
-        public DayForecast(Context context, String condition, int conditionCode, float low, float high,
-                float[] dayTemps, String tempUnit, float humidity, float wind, int windDir, String speedUnit,
-                float pressure, float rain, float snow) {
+        public DayForecast(Context context, String condition, int conditionCode, float low,
+                float morning, float day, float evening, float night, float high, String tempUnit) {
             this.context = context.getApplicationContext();
             this.condition = condition;
             this.conditionCode = conditionCode;
             this.low = low;
+            this.morning = morning;
+            this.day = day;
+            this.evening = evening;
+            this.night = night;
             this.high = high;
-            this.dayTemps = dayTemps;
             this.tempUnit = tempUnit;
-            this.humidity = humidity;
-            this.wind = wind;
-            this.windDirection = windDir;
-            this.speedUnit = speedUnit;
-            this.pressure = pressure;
-            this.pressureUnit = context.getResources().getString(R.string.pressure_unit_title);
-            this.rain = rain;
-            this.snow = snow;
-            this.precipitationUnit = context.getResources().getString(R.string.precipitation_unit_1h_title);
         }
 
         public String getCondition() {
@@ -162,36 +151,24 @@ public class WeatherInfo {
             return getFormattedTemperature(low, tempUnit);
         }
 
+        public String getFormattedMorning() {
+            return getFormattedTemperature(morning, tempUnit);
+        }
+
+        public String getFormattedDay() {
+            return getFormattedTemperature(day, tempUnit);
+        }
+
+        public String getFormattedEvening() {
+            return getFormattedTemperature(evening, tempUnit);
+        }
+
+        public String getFormattedNight() {
+            return getFormattedTemperature(night, tempUnit);
+        }
+
         public String getFormattedHigh() {
             return getFormattedTemperature(high, tempUnit);
-        }
-
-        public String[] getFormattedDayTemps() {
-            String[] formattedDayTemps = new String[4];
-            for (int i = 0; i < 4; i++) {
-                formattedDayTemps[i] = getFormattedTemperature(dayTemps[i], tempUnit);
-            }
-            return formattedDayTemps;
-        }
-
-        public String getFormattedHumidity() {
-            return WeatherInfo.getFormattedHumidity(humidity);
-        }
-
-        public String getFormattedWind() {
-            return WeatherInfo.getFormattedWind(context, wind, windDirection, speedUnit);
-        }
-
-        public String getFormattedPressure() {
-            return WeatherInfo.getFormattedPressure(pressure, pressureUnit);
-        }
-
-        public String getFormattedRain() {
-            return getFormattedPrecipitation(rain, precipitationUnit);
-        }
-
-        public String getFormattedSnow() {
-            return getFormattedPrecipitation(snow, precipitationUnit);
         }
     }
 
@@ -314,6 +291,22 @@ public class WeatherInfo {
 
     public String getFormattedLow() {
         return getFormattedTemperature(mForecasts.get(0).low, mTempUnit);
+    }
+
+    public String getFormattedMorning() {
+        return getFormattedTemperature(mForecasts.get(0).morning, mTempUnit);
+    }
+
+    public String getFormattedDay() {
+        return getFormattedTemperature(mForecasts.get(0).day, mTempUnit);
+    }
+
+    public String getFormattedEvening() {
+        return getFormattedTemperature(mForecasts.get(0).evening, mTempUnit);
+    }
+
+    public String getFormattedNight() {
+        return getFormattedTemperature(mForecasts.get(0).night, mTempUnit);
     }
 
     public String getFormattedHigh() {
@@ -600,17 +593,12 @@ public class WeatherInfo {
             builder.append(d.getCondition());
             builder.append("(").append(d.conditionCode).append(")");
             builder.append(", low ").append(d.getFormattedLow());
+            builder.append(", morning ").append(d.getFormattedMorning());
+            builder.append(", day ").append(d.getFormattedDay());
+            builder.append(", evening ").append(d.getFormattedEvening());
+            builder.append(", night ").append(d.getFormattedNight());
             builder.append(", high ").append(d.getFormattedHigh());
-            builder.append(", dayTemps: ");
-            builder.append(", morning ").append(d.getFormattedDayTemps()[0]);
-            builder.append(", day ").append(d.getFormattedDayTemps()[1]);
-            builder.append(", evening ").append(d.getFormattedDayTemps()[2]);
-            builder.append(", night ").append(d.getFormattedDayTemps()[3]);
-            builder.append(", humidity ").append(d.getFormattedHumidity());
-            builder.append(", wind ").append(d.getFormattedWind());
-            builder.append(", pressure ").append(d.getFormattedPressure());
-            builder.append(", rain ").append(d.getFormattedRain());
-            builder.append(", snow ").append(d.getFormattedSnow());
+            builder.append(", tempunit ").append(d.tempUnit);
         }
         if (mHourForecasts.size() > 0) {
             builder.append(", hourForecasts:");
@@ -665,19 +653,12 @@ public class WeatherInfo {
             builder.append(d.condition).append(';');
             builder.append(d.conditionCode).append(';');
             builder.append(d.low).append(';');
+            builder.append(d.morning).append(';');
+            builder.append(d.day).append(';');
+            builder.append(d.evening).append(';');
+            builder.append(d.night).append(';');
             builder.append(d.high).append(';');
-            builder.append(d.dayTemps[0]).append(';');
-            builder.append(d.dayTemps[1]).append(';');
-            builder.append(d.dayTemps[2]).append(';');
-            builder.append(d.dayTemps[3]).append(';');
-            builder.append(d.tempUnit).append(';');
-            builder.append(d.humidity).append(';');
-            builder.append(d.wind).append(';');
-            builder.append(d.windDirection).append(';');
-            builder.append(d.speedUnit).append(';');
-            builder.append(d.pressure).append(';');
-            builder.append(d.rain).append(';');
-            builder.append(d.snow);
+            builder.append(d.tempUnit);
         }
         builder.append('|');
         serializeHourForecasts(builder);
@@ -745,34 +726,24 @@ public class WeatherInfo {
             return null;
         }
 
-        if (forecastItems == 0 || forecastParts.length != 16 * forecastItems + 1) {
+        if (forecastItems == 0 || forecastParts.length != 9 * forecastItems + 1) {
             return null;
         }
 
         // Parse the forecast data
         try {
             for (int item = 0; item < forecastItems; item ++) {
-                int offset = item * 16 + 1;
-                float[] dayTemps = {
-                    Float.parseFloat(forecastParts[offset + 4]),
-                    Float.parseFloat(forecastParts[offset + 5]),
-                    Float.parseFloat(forecastParts[offset + 6]),
-                    Float.parseFloat(forecastParts[offset + 7])
-                };
+                int offset = item * 9 + 1;
                 DayForecast day = new DayForecast(context,
                         /* condition */ forecastParts[offset],
                         /* conditionCode */ Integer.parseInt(forecastParts[offset + 1]),
                         /* low */ Float.parseFloat(forecastParts[offset + 2]),
-                        /* high */ Float.parseFloat(forecastParts[offset + 3]),
-                        dayTemps,
-                        /* tempUnit */ forecastParts[offset + 8],
-                        /* humidity */ Float.parseFloat(forecastParts[offset + 9]),
-                        /* wind */ Float.parseFloat(forecastParts[offset + 10]),
-                        /* windDirection */ Integer.parseInt(forecastParts[offset + 11]),
-                        /* speedUnit */ forecastParts[offset + 12],
-                        /* pressure */ Float.parseFloat(forecastParts[offset + 13]),
-                        /* rain */ Float.parseFloat(forecastParts[offset + 14]),
-                        /* snow */ Float.parseFloat(forecastParts[offset + 15]));
+                        /* morning */ Float.parseFloat(forecastParts[offset + 3]),
+                        /* day */ Float.parseFloat(forecastParts[offset + 4]),
+                        /* evening */ Float.parseFloat(forecastParts[offset + 5]),
+                        /* night */ Float.parseFloat(forecastParts[offset + 6]),
+                        /* high */ Float.parseFloat(forecastParts[offset + 7]),
+                        /* tempUnit */ forecastParts[offset + 8]);
 
                 if (!Float.isNaN(day.low) && !Float.isNaN(day.high) && day.conditionCode >= 0) {
                     forecasts.add(day);
