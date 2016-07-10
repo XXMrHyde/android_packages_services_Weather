@@ -174,12 +174,6 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
         super.onDestroy();
     }
 
-    @Override
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-        finish();
-    }
-
     private WeatherInfo getWeather() {
         return Config.getWeatherData(this);
     }
@@ -249,12 +243,12 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
             mTabPager.setCurrentItem(day, false);
         }
 
-        mCurrentWeatherFragment = (CurrentWeatherFragment)
-                fragmentManager.findFragmentByTag(CURRENT_WEATHER_TAG);
         if (mCurrentWeatherFragment == null) {
             mCurrentWeatherFragment = new CurrentWeatherFragment();
             transaction.add(R.id.tab_pager, mCurrentWeatherFragment, CURRENT_WEATHER_TAG);
+        }
 
+        if (mForecastWeatherFragments == null) {
             mForecastWeatherFragments = new ForecastWeatherFragment[4];
             for (int i = 0; i < mForecastWeatherFragments.length; i++) {
                 mForecastWeatherFragments[i] = new ForecastWeatherFragment();
