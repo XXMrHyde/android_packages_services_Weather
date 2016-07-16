@@ -214,7 +214,8 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
         mTabPager.setOnPageChangeListener(mTabPagerListener);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(getResources().getString(R.string.action_bar_current_title) + ", " + mWeatherInfo.getCity());
+        mToolbar.setTitle(getResources().getString(R.string.action_bar_current_title)
+                + (DetailedWeatherHelper.showLocation(this) ? ", " + mWeatherInfo.getCity() : ""));
         mToolbar.setSubtitle(mToolbarSubTitles.get(0));
 
         final boolean customizeColors = DetailedWeatherHelper.customizeColors(this);
@@ -283,7 +284,8 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                 }
             }
-            mToolbar.setTitle(getResources().getString(R.string.action_bar_current_title) + ", " + mWeatherInfo.getCity());
+            mToolbar.setTitle(getResources().getString(R.string.action_bar_current_title)
+                    + (DetailedWeatherHelper.showLocation(this) ? ", " + mWeatherInfo.getCity() : ""));
             final int tabPosition = getTabPositionForTextDirection(mTabPager.getCurrentItem());
             mToolbar.setSubtitle(mToolbarSubTitles.get(tabPosition));
             mViewPagerTabs.setTabTitles(mTabTitles);
