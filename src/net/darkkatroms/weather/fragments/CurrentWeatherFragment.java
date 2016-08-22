@@ -413,6 +413,7 @@ public class CurrentWeatherFragment extends Fragment {
         public View cardLayout;
         public View card;
         public View expandedContent;
+        public TextView forecast;
         public TextView timeValue;
         public ImageView image;
         public View imageDivider;
@@ -439,6 +440,8 @@ public class CurrentWeatherFragment extends Fragment {
             cardLayout = inflater.inflate(R.layout.forecast_weather_card, null);
             card = cardLayout.findViewById(R.id.forecast_card);
             expandedContent = cardLayout.findViewById(R.id.forecast_expanded_content_layout);
+
+            forecast = (TextView) cardLayout.findViewById(R.id.forecast_weather);
             timeValue = (TextView) cardLayout.findViewById(R.id.forecast_time);
             image = (ImageView) cardLayout.findViewById(R.id.forecast_condition_image);
             imageDivider = cardLayout.findViewById(R.id.forecast_image_divider);
@@ -501,6 +504,7 @@ public class CurrentWeatherFragment extends Fragment {
 
                 card.setBackgroundTintList(ColorStateList.valueOf(cardBackgroundColor));
                 timeValue.setTextColor(textColorPrimary);
+                forecast.setTextColor(textColorPrimary);
 
                 if (conditionImageColor != 0) {
                     image.setImageTintList(ColorStateList.valueOf(conditionImageColor));
