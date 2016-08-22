@@ -27,7 +27,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/card_background"
-        android:backgroundTint="?attr/cardBackgroundTint"
+        android:backgroundTint="?android:attr/colorBackgroundFloating"
         android:elevation="2dp"
         android:orientation="vertical">
 
@@ -38,7 +38,7 @@
             android:text="@string/daytemps_title"
             android:padding="16dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?attr/cardTextColorPrimary" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <LinearLayout
             android:id="@+id/forecast_weather_temps_layout"
@@ -60,14 +60,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/morning_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_weather_temp_morning_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -84,14 +84,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/day_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_weather_temp_day_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -108,14 +108,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/evening_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_weather_temp_evening_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -132,14 +132,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/night_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_weather_temp_night_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -166,14 +166,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/min_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_weather_min_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -190,14 +190,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/max_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_weather_max_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -212,7 +212,7 @@
             android:paddingEnd="16dp"
             android:text="@string/provider_openweathermap"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/theme_accent"
+            android:textColor="?android:attr/colorAccent"
             android:clickable="true"
             android:background="@drawable/ripple_drawable_rectangle" />
 

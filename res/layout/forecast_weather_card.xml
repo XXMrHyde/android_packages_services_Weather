@@ -27,7 +27,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/card_background"
-        android:backgroundTint="?attr/cardBackgroundTint"
+        android:backgroundTint="?android:attr/colorBackgroundFloating"
         android:elevation="2dp"
         android:orientation="vertical">
 
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/forecast_title"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="?attr/cardTextColorPrimary" />
+                android:textColor="?android:attr/textColorPrimary" />
 
             <TextView
                 android:id="@+id/forecast_time"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?attr/cardTextColorSecondary" />
+                android:textColor="?android:attr/textColorSecondary" />
 
         </LinearLayout>
 
@@ -68,7 +68,8 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:src="@android:drawable/ic_dialog_alert"
-                android:tint="?attr/cardIconTint"
+                android:tint="?android:attr/colorControlNormal"
+                android:tintMode="multiply"
                 android:scaleType="fitCenter" />
 
             <View
@@ -77,7 +78,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:background="?attr/cardDividerColor" />
+                android:background="?attr/dividerColor" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -89,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <View
                     android:id="@+id/forecast_temp_condition_divider"
@@ -97,14 +98,14 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="?attr/cardDividerColor" />
+                    android:background="?attr/dividerColor" />
 
                 <TextView
                     android:id="@+id/forecast_condition_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
             </LinearLayout>
 
@@ -132,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/precipitation_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_precipitation_value"
@@ -140,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_precipitation_value"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
                 <Space
                     android:layout_width="1dp"
@@ -152,14 +153,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/wind_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_wind_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -176,14 +177,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/humidity_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_humidity_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
                 <Space
                     android:layout_width="1dp"
@@ -195,14 +196,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pressure_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorPrimary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/forecast_pressure_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/cardTextColorSecondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -212,7 +213,7 @@
             android:id="@+id/forecast_expand_collapse_button_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?attr/cardDividerColor"
+            android:background="?attr/dividerColor"
             android:alpha="0"
             android:visibility="gone" />
 
@@ -235,7 +236,7 @@
                 android:paddingStart="8dp"
                 android:text="@string/expand_card"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?attr/cardTextColorPrimary" />
+                android:textColor="?android:attr/textColorPrimary" />
 
             <ImageView
                 android:id="@+id/forecast_expand_collapse_button_icon"
@@ -243,7 +244,8 @@
                 android:layout_height="24dp"
                 android:paddingEnd="8dp"
                 android:src="@drawable/ic_expand_more"
-                android:tint="?attr/cardIconTint"
+                android:tint="?android:attr/colorControlNormal"
+                android:tintMode="multiply"
                 android:scaleType="centerInside" />
 
         </LinearLayout>

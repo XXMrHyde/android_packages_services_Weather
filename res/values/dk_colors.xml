@@ -24,42 +24,24 @@
     <!-- Theme settings -->
     <color name="settings_theme_primary">#ff263238</color>  <!-- material_blue_grey_900 -->
     <color name="settings_theme_primary_dark">#ff21272b</color>  <!-- material_blue_grey_950 -->
-    <color name="settings_theme_accent">#ff009688</color>  <!-- material_deep_teal_500 -->
 
     <!-- Theme  detailed Weather -->
 
     <!-- General -->
     <color name="theme_primary">#ff2196f3</color>  <!-- material blue 500 -->
     <color name="theme_primary_dark">#ff1976d2</color>  <!-- material blue 700 -->
-    <color name="theme_accent">#ff2196f3</color>  <!-- material blue 500 -->
     <color name="actionbar_background_color">@color/theme_primary</color>
     <color name="action_bar_icon_tint">#ffffffff</color>
     <color name="actionbar_text_color">#ffffffff</color>
     <color name="actionbar_sub_text_color">#b3ffffff</color>
     <color name="actionbar_unselected_text_color">#b3ffffff</color>
 
-    <!-- Theme dark -->
-    <color name="card_background_dark">#ff424242</color>
-    <color name="card_divider_dark">#33ffffff</color>
-    <color name="card_text_color_primary_dark">#ffffffff</color>
-    <color name="card_text_color_secondary_dark">#b3ffffff</color>
-    <color name="card_icon_color_dark">#ffffffff</color>
-    <color name="card_ripple_color_dark">#33ffffff</color>
+    <!-- Theme  Material/Darkkat -->
+    <color name="divider_color_dark">#33ffffff</color>
 
-    <!-- Theme darkkat -->
-    <color name="color_background">#ff1b1f23</color>
-    <color name="card_background_darkkat">#ff182C37</color>
-    <color name="card_divider_darkkat">#3333b5e5</color>
-    <color name="card_text_color_primary_darkkat">#ff33b5e5</color>
-    <color name="card_text_color_secondary_darkkat">#b333b5e5</color>
-    <color name="card_icon_color_darkkat">#ff33b5e5</color>
-    <color name="card_ripple_color_darkkat">#3333b5e5</color>
+    <!-- Theme  Material light -->
+    <color name="divider_color_light">#1f000000</color>
 
-    <!-- Theme light -->
-    <color name="card_background_light">#ffffffff</color>
-    <color name="card_divider_light">#1f000000</color>
-    <color name="card_text_color_primary_light">#de000000</color>
-    <color name="card_text_color_secondary_light">#8a000000</color>
-    <color name="card_icon_color_light">#8a000000</color>
-    <color name="card_ripple_color_light">#1f000000</color>
+    <!-- Theme  Darkkat blue -->
+    <color name="divider_color_blue">#4233b5e5</color>
 </resources>

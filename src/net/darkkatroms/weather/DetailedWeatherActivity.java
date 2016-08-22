@@ -306,11 +306,13 @@ public class DetailedWeatherActivity extends Activity implements OnClickListener
 
     private int getCustomThemeResId() {
         int index = DetailedWeatherHelper.getTheme(this);
-        int resId = R.style.Theme_Material_DetailedWeather;
-        if (index == DetailedWeatherHelper.THEME_DARKKAT) {
-            resId = R.style.Theme_Material_DarkKat_DetailedWeather;
-        } else if (index == DetailedWeatherHelper.THEME_MATERIAL_LIGHT) {
-            resId = R.style.Theme_Material_Light_DetailedWeather;
+        int resId = R.style.DetailedWeatherTheme;
+        if (index == DetailedWeatherHelper.THEME_MATERIAL_LIGHT) {
+            resId = R.style.DetailedWeatherThemeLight;
+        } else if (index == DetailedWeatherHelper.THEME_DARKKAT) {
+            resId = R.style.DetailedWeatherThemeDarkKat;
+        } else if (index == DetailedWeatherHelper.THEME_DARKKAT_BLUE) {
+            resId = R.style.DetailedWeatherThemeDarkKatBlue;
         }
         return resId;
     }

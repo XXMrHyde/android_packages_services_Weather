@@ -180,8 +180,8 @@ public class CurrentWeatherFragment extends Fragment {
         final boolean customizeColors = DetailedWeatherHelper.customizeColors(getActivity());
         final int conditionImageColor = DetailedWeatherHelper.getConditionImageColor(getActivity());
         if (customizeColors) {
-            final int backgroundColor = DetailedWeatherHelper.getContentBackgroundColor(getActivity());
-            final int cardBackground = DetailedWeatherHelper.getCardsBackgroundColor(getActivity());
+            final int backgroundColor = DetailedWeatherHelper.getContentBgColor(getActivity());
+            final int cardBackgroundColor = DetailedWeatherHelper.getCardsBgColor(getActivity());
             final int textColorPrimary = DetailedWeatherHelper.getCardsTextColor(getActivity(), true);
             final int textColorSecondary = DetailedWeatherHelper.getCardsTextColor(getActivity(), false);
             final int iconColor = DetailedWeatherHelper.getCardsIconColor(getActivity());
@@ -190,7 +190,7 @@ public class CurrentWeatherFragment extends Fragment {
             final int rippleColor = DetailedWeatherHelper.getCardsRippleColor(getActivity());
 
             layout.setBackgroundColor(backgroundColor);
-            mCard.setBackgroundTintList(ColorStateList.valueOf(cardBackground));
+            mCard.setBackgroundTintList(ColorStateList.valueOf(cardBackgroundColor));
 
             mCurrent.setTextColor(textColorPrimary);
             mTime.setTextColor(textColorSecondary);
@@ -489,7 +489,7 @@ public class CurrentWeatherFragment extends Fragment {
             final int conditionImageColor = 
                     DetailedWeatherHelper.getConditionImageColor(getActivity());
             if (customizeColors) {
-                final int cardBackground = DetailedWeatherHelper.getCardsBackgroundColor(getActivity());
+                final int cardBackgroundColor = DetailedWeatherHelper.getCardsBgColor(getActivity());
                 final int textColorPrimary = 
                         DetailedWeatherHelper.getCardsTextColor(getActivity(), true);
                 final int textColorSecondary = 
@@ -499,7 +499,7 @@ public class CurrentWeatherFragment extends Fragment {
                 final int dividerColor = (dividerAlpha << 24) | (textColorPrimary & 0x00ffffff);
                 final int rippleColor = DetailedWeatherHelper.getCardsRippleColor(getActivity());
 
-                card.setBackgroundTintList(ColorStateList.valueOf(cardBackground));
+                card.setBackgroundTintList(ColorStateList.valueOf(cardBackgroundColor));
                 timeValue.setTextColor(textColorPrimary);
 
                 if (conditionImageColor != 0) {

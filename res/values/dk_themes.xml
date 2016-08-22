@@ -15,69 +15,52 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <style name="Theme.Settings" parent="@android:style/Theme.Material">
-        <item name="android:colorBackground">@color/color_background</item>
+    <style name="Theme.Settings" parent="@android:style/Theme.Material.Settings">
         <item name="android:colorPrimary">@color/settings_theme_primary</item>
         <item name="android:colorPrimaryDark">@color/settings_theme_primary_dark</item>
-        <item name="android:colorAccent">@color/settings_theme_accent</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:dialogTheme">@style/DialogTheme</item>
-        <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
     </style>
 
-    <style name="DialogTheme" parent="@android:style/Theme.Material.Dialog">
-        <item name="android:colorBackground">@color/color_background</item>
-        <item name="android:windowBackground">@*android:drawable/dialog_background_material</item>
-        <item name="android:colorControlActivated">@color/settings_theme_accent</item>
-    </style>
-
-    <style name="AlertDialogTheme" parent="@android:style/Theme.Material.Dialog.Alert">
-        <item name="android:colorBackground">@color/color_background</item>
-        <item name="android:colorAccent">@color/settings_theme_accent</item>
-    </style>
-
-    <style name="Theme.Material.DetailedWeather" parent="@android:style/Theme.Material">
+    <style name="DetailedWeatherTheme" parent="@android:style/Theme.Material">
         <item name="android:colorPrimary">@color/theme_primary</item>
         <item name="android:colorPrimaryDark">@color/theme_primary_dark</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/theme_primary_dark</item>
         <item name="android:actionBarStyle">@style/DetailedWeatherActionBarStyle</item>
         <item name="android:actionBarTabBarStyle">@style/DetailedWeatherActionBarTabBarStyle</item>
         <item name="android:actionBarTabTextStyle">@style/DetailedWeatherActionBarTabTextStyle</item>
-        <item name="contentBackground">?android:attr/colorBackground</item>
-        <item name="cardBackgroundTint">@color/card_background_dark</item>
-        <item name="cardDividerColor">@color/card_divider_dark</item>
-        <item name="cardTextColorPrimary">@color/card_text_color_primary_dark</item>
-        <item name="cardTextColorSecondary">@color/card_text_color_secondary_dark</item>
-        <item name="cardIconTint">@color/card_icon_color_dark</item>
-        <item name="cardRippleColor">@color/card_ripple_color_dark</item>
+        <item name="dividerColor">@color/divider_color_dark</item>
+        <item name="rippleColor">@color/ripple_color_dark</item>
     </style>
 
-    <style name="Theme.Material.DarkKat.DetailedWeather" parent="@style/Theme.Material.DetailedWeather">
-        <item name="contentBackground">@color/color_background</item>
-        <item name="cardBackgroundTint">@color/card_background_darkkat</item>
-        <item name="cardDividerColor">@color/card_divider_darkkat</item>
-        <item name="cardTextColorPrimary">@color/card_text_color_primary_darkkat</item>
-        <item name="cardTextColorSecondary">@color/card_text_color_secondary_darkkat</item>
-        <item name="cardIconTint">@color/card_icon_color_darkkat</item>
-        <item name="cardRippleColor">@color/card_ripple_color_darkkat</item>
-
-    </style>
-
-    <style name="Theme.Material.Light.DetailedWeather" parent="@android:style/Theme.Material.Light">
+    <style name="DetailedWeatherThemeLight" parent="@android:style/Theme.Material.Light">
         <item name="android:colorPrimary">@color/theme_primary</item>
         <item name="android:colorPrimaryDark">@color/theme_primary_dark</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/theme_primary_dark</item>
         <item name="android:actionBarStyle">@style/DetailedWeatherActionBarStyle</item>
         <item name="android:actionBarTabBarStyle">@style/DetailedWeatherActionBarTabBarStyle</item>
         <item name="android:actionBarTabTextStyle">@style/DetailedWeatherActionBarTabTextStyle</item>
-        <item name="contentBackground">?android:attr/colorBackground</item>
-        <item name="cardBackgroundTint">@color/card_background_light</item>
-        <item name="cardDividerColor">@color/card_divider_light</item>
-        <item name="cardTextColorPrimary">@color/card_text_color_primary_light</item>
-        <item name="cardTextColorSecondary">@color/card_text_color_secondary_light</item>
-        <item name="cardIconTint">@color/card_icon_color_light</item>
-        <item name="cardRippleColor">@color/card_ripple_color_light</item>
+        <item name="dividerColor">@color/divider_color_light</item>
+        <item name="rippleColor">@color/ripple_color_light</item>
+    </style>
+
+    <style name="DetailedWeatherThemeDarkKat" parent="@*android:style/ThemeDarkKat">
+        <item name="android:colorPrimary">@color/theme_primary</item>
+        <item name="android:colorPrimaryDark">@color/theme_primary_dark</item>
+        <item name="android:statusBarColor">@color/theme_primary_dark</item>
+        <item name="android:actionBarStyle">@style/DetailedWeatherActionBarStyle</item>
+        <item name="android:actionBarTabBarStyle">@style/DetailedWeatherActionBarTabBarStyle</item>
+        <item name="android:actionBarTabTextStyle">@style/DetailedWeatherActionBarTabTextStyle</item>
+        <item name="dividerColor">@color/divider_color_dark</item>
+        <item name="rippleColor">@color/ripple_color_dark</item>
+    </style>
+
+    <style name="DetailedWeatherThemeDarkKatBlue" parent="@*android:style/ThemeDarkKat.Blue">
+        <item name="android:colorPrimary">@color/theme_primary</item>
+        <item name="android:colorPrimaryDark">@color/theme_primary_dark</item>
+        <item name="android:statusBarColor">@color/theme_primary_dark</item>
+        <item name="android:actionBarStyle">@style/DetailedWeatherActionBarStyle</item>
+        <item name="android:actionBarTabBarStyle">@style/DetailedWeatherActionBarTabBarStyle</item>
+        <item name="android:actionBarTabTextStyle">@style/DetailedWeatherActionBarTabTextStyle</item>
+        <item name="dividerColor">@color/divider_color_blue</item>
+        <item name="rippleColor">@color/ripple_color_blue</item>
     </style>
 </resources>
