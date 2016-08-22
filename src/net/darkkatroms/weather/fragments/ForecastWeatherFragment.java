@@ -113,6 +113,7 @@ public class ForecastWeatherFragment extends Fragment {
 
         final boolean customizeColors = DetailedWeatherHelper.customizeColors(getActivity());
         if (customizeColors) {
+            final int accentColor = DetailedWeatherHelper.getAccentColor(getActivity());
             final int backgroundColor = DetailedWeatherHelper.getContentBgColor(getActivity());
             final int cardBackgroundColor = DetailedWeatherHelper.getCardsBgColor(getActivity());
             final int textColorPrimary = DetailedWeatherHelper.getCardsTextColor(getActivity(), true);
@@ -125,6 +126,7 @@ public class ForecastWeatherFragment extends Fragment {
                 dayTempsTitles[i].setTextColor(textColorPrimary);
                 mDayTempsValues[i].setTextColor(textColorSecondary);
             }
+            mProviderLink.setTextColor(accentColor);
             minTitle.setTextColor(textColorPrimary);
             mMinValue.setTextColor(textColorSecondary);
             maxTitle.setTextColor(textColorPrimary);

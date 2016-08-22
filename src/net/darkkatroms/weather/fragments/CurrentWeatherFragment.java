@@ -180,6 +180,7 @@ public class CurrentWeatherFragment extends Fragment {
         final boolean customizeColors = DetailedWeatherHelper.customizeColors(getActivity());
         final int conditionImageColor = DetailedWeatherHelper.getConditionImageColor(getActivity());
         if (customizeColors) {
+            final int accentColor = DetailedWeatherHelper.getAccentColor(getActivity());
             final int backgroundColor = DetailedWeatherHelper.getContentBgColor(getActivity());
             final int cardBackgroundColor = DetailedWeatherHelper.getCardsBgColor(getActivity());
             final int textColorPrimary = DetailedWeatherHelper.getCardsTextColor(getActivity(), true);
@@ -211,6 +212,7 @@ public class CurrentWeatherFragment extends Fragment {
                 mDayTempsValues[i].setTextColor(textColorSecondary);
             }
 
+            mProviderLink.setTextColor(accentColor);
             mPrecipitationTitle.setTextColor(textColorPrimary);
             mPrecipitationValue.setTextColor(textColorSecondary);
             mWindTitle.setTextColor(textColorPrimary);
